@@ -13,31 +13,24 @@ class Comment {
    * user_id: id of user commenting
    * content: string txt body of comment
    *
-   * Returns {Promise<Object>} with new id of comment
+   * Returns {commentId, userId, txtContent, postId, dateCommented}
    *
    * Throws error if there's an error creating the comment
    */
 
   static async create(post_id, user_id, content) {
-    try {
-      // create comment
-      const results = await db.query(
-        `INSERT INTO comments (post_id, user_id, content) VALUES ($1, $2, $3)`,
-        [post_id, user_id, content]
-      );
+    // create comment
+    const result = await db.query(
+      `INSERT INTO comment (post_id, user_id, txt_content) 
+        VALUES ($1, $2, $3) 
+        RETURNING comment_id AS commentId, user_id AS userId, txt_content AS txtContent, post_id AS postId, date_commented AS dateCommented`,
+      [post_id, user_id, content]
+    );
 
-      const comment_id = results.rows[0].id;
-      // create a comment -> post relation
-      const postRelation = await db.query(
-        `INSERT INTO comment_to_post (comment_id, post_id) 
-    VALUES ($1, $2)`,
-        [comment_id, post_id]
-      );
+    const comment = result.rows[0];
+    if (!comment) throw new Error(`Error creating comment: ${err.message}`);
 
-      return postRelation;
-    } catch (err) {
-      throw new Error(`Error creating comment: ${err.message}`);
-    }
+    return comment;
   }
 
   /** Delete a Comment
@@ -51,9 +44,9 @@ class Comment {
 
   static async delete(id) {
     const result = await db.query(
-      `DELETE FROM comments
-       WHERE id = $1
-       RETURNING id`,
+      `DELETE FROM comment
+       WHERE comment_id = $1
+       RETURNING comment_id AS commentId`,
       [id]
     );
     const comment = result.rows[0];
@@ -71,22 +64,23 @@ class Comment {
    *
    * Throws error if there's an error retrieving the comments
    */
-  static async getForPost(id) {
-    try {
-      const results = await db.query(
-        `SELECT comment.txt_content, user_profile.username
-            FROM comment
-            JOIN user_profile ON comment.user_id = user_profile.user_id
-            JOIN comment_to_post ON comment.comment_id = comment_to_post.comment_id
-            JOIN post ON comment_to_post.post_id = post.post_id
-            WHERE post.post_id = $1`,
-        [id]
-      );
+  static async getForPost(post_id) {
+    const results = await db.query(
+      `SELECT comment.txt_content, users.username
+          FROM comment
+          JOIN users ON comment.user_id = users.user_id
+          WHERE comment.post_id = $1`,
+      [post_id]
+    );
+    if (!results.rows[0])
+      throw new NotFoundError(`Error getting comments for post_id: ${post_id}`);
 
-      return results;
-    } catch (err) {
-      throw new Error(`Error getting comments for post: ${err.message}`);
-    }
+    const comments = results.rows.map((row) => ({
+      txt_content: row.txt_content,
+      username: row.username,
+    }));
+
+    return comments;
   }
 }
 

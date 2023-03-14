@@ -1,8 +1,10 @@
 "use strict";
 
+const bcrypt = require("bcrypt");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 const db = require("../db");
-
+const { BadRequestError, NotFoundError } = require("../expressError");
+const { sqlForPartialUpdate } = require("../helpers/sql");
 /** Related functions for users */
 
 class User {
@@ -10,22 +12,22 @@ class User {
    *
    *  data should be {}
    *
-   * Returns { } containing user details
+   * Returns {} containing user details
    */
 
-  static async register(
+  static async register({
     username,
     password,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     email,
-    image_url
-  ) {
+    imageUrl,
+  }) {
     // Check if the user already exists in the database
     const duplicateCheck = await db.query(
       `SELECT username 
-            FROM user_profile
-            WHERE username =$1`,
+            FROM users
+            WHERE username = $1`,
       [username]
     );
 
@@ -38,16 +40,16 @@ class User {
 
     // Insert the new user into the database
     const result = await db.query(
-      `INSERT INTO user_profile
-            (username,
-                password,
-                first_name,
-                last_name;
-                email,
-                image_url)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING usename, first_name, AS "firstName, last_name AS "lastName", email, image_url AS "imgUrl"`,
-      [username, hashedPassword, first_name, last_name, email, image_url]
+      `INSERT INTO users
+              (username,
+                  password,
+                  first_name,
+                  last_name,
+                  email,
+                  image_url)
+                  VALUES ($1, $2, $3, $4, $5, $6)
+                  RETURNING username, first_name AS "firstName", last_name AS "lastName", email, image_url AS "imageUrl"`,
+      [username, hashedPassword, firstName, lastName, email, imageUrl]
     );
 
     // Return the newly created user
@@ -64,13 +66,38 @@ class User {
     // Find the user in the database using their username
     const userRes = await db.query(
       `SELECT username,
-                fist_name AS firstName,
-                last_name AS lastName,
-                email,
-                image_url AS "imgUrl"
-        FROM user_profile
-        WHERE username = $1`,
+                  first_name AS "firstName",
+                  last_name AS "lastName",
+                  email,
+                  image_url AS "imageUrl"
+          FROM users
+          WHERE username = $1`,
       [username]
+    );
+
+    // If no user is found, throw a NotFoundError
+    const user = userRes.rows[0];
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    return user;
+  }
+
+  /** Get user by id
+   *
+   * Returns {} containing user details
+   */
+
+  static async getById(userId) {
+    // Find the user in the database using their username
+    const userRes = await db.query(
+      `SELECT username,
+                  first_name AS "firstName",
+                  last_name AS "lastName",
+                  email,
+                  image_url AS "imageUrl"
+          FROM users
+          WHERE user_id = $1`,
+      [userId]
     );
 
     // If no user is found, throw a NotFoundError
@@ -92,16 +119,17 @@ class User {
     }
 
     // Convert the property names in `data` to column names in the database
-    const { setCol, values } = sqlForPartialUpdate(data, {
+    const { setCols, values } = sqlForPartialUpdate(data, {
       firstName: "first_name",
       lastName: "last_name",
       imgUrl: "image_url",
+      email: "email",
     });
 
     // Use placeholders in the SQL query to prevent SQL injection attacks
     const usernameVarIdx = "$" + (values.length + 1);
-    const querySql = `UPDATE user_profile
-                        SET ${setCol}
+    const querySql = `UPDATE users
+                        SET ${setCols}
                         WHERE username = ${usernameVarIdx}
                         RETURNING username,
                                     first_name AS "firstName",
@@ -114,7 +142,7 @@ class User {
     const user = result.rows[0];
 
     // If no user is found, throw a NotFoundError
-    if (!user) throw new NotFound();
+    if (!user) throw new NotFoundError(`No user: ${username}`);
 
     // Delete to prevent password being sent back to user
     delete user.password;

@@ -1,5 +1,6 @@
 const db = require("../db");
 const { NotFoundError } = require("../expressError");
+const User = require("./user");
 
 /** Related functions for follows. */
 
@@ -12,7 +13,7 @@ class Follow {
    * Returns { follower_id, followed_id }
    * */
 
-  static async create(followerId, followedId) {
+  static async add(followerId, followedId) {
     try {
       const results = await db.query(
         `INSERT INTO follow (follower_id, followed_id)
@@ -64,7 +65,8 @@ class Follow {
              WHERE follower_id = $1 AND followed_id = $2`,
       [followerId, followedId]
     );
-    return result.rows.length !== 0;
+    console.log("LENGTH: ", result.rows);
+    return result.rows.length > 0;
   }
 
   /** Get all users a user is following
@@ -75,14 +77,20 @@ class Follow {
    */
 
   static async getFollowedUsers(userId) {
-    const results = await db.query(
-      `SELECT follower_id, followed_id, username
+    //Check if user exist
+    await User.getById(userId);
+
+    const result = await db.query(
+      `SELECT followed_id, username
              FROM follow
-             JOIN user_profile ON follow.followed_id = user_profile.user_id
+             JOIN users ON follow.followed_id = users.user_id
              WHERE follower_id = $1`,
       [userId]
     );
-    return results.rows;
+    if (!result.rows[0])
+      throw new NotFoundError(`No users followed by userId: ${userId}`);
+
+    return result.rows;
   }
 
   /** Get all users following a user
@@ -93,14 +101,20 @@ class Follow {
    */
 
   static async getFollowers(userId) {
-    const results = await db.query(
-      `SELECT follower_id, followed_id, username
+    // Check if user exist
+    await User.getById(userId);
+
+    const result = await db.query(
+      `SELECT follower_id, username
              FROM follow
-             JOIN user_profile ON follow.follower_id = user_profile.user_id
+             JOIN users ON follow.follower_id = users.user_id
              WHERE followed_id = $1`,
       [userId]
     );
-    return results.rows;
+    if (!result.rows[0])
+      throw new NotFoundError(`No users following userId: ${userId}`);
+
+    return result.rows;
   }
 }
 
