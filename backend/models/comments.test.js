@@ -10,6 +10,9 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testCommentIds,
+  testUserIds,
+  testPostIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -20,20 +23,26 @@ afterAll(commonAfterAll);
 /** Create a comment */
 describe("create", function () {
   test("works", async function () {
-    const newComment = await Comment.create(1, 2, "Test comment");
+    const newComment = await Comment.create(
+      testPostIds[0],
+      testUserIds[1],
+      "Test comment"
+    );
     expect(newComment).toEqual(expect.any(Object));
     expect(newComment.commentid).toEqual(expect.any(Number));
-    expect(newComment.userid).toEqual(2);
+    expect(newComment.userid).toEqual(testUserIds[1]);
   });
 });
 
 /* Delete a comment */
 describe("delete", function () {
   test("works", async function () {
-    const result = await Comment.delete(1);
+    const result = await Comment.delete(testCommentIds[0]);
     expect(result).toEqual(true);
     // Confirm comment has been deleted by trying to fetch it
-    const res = await db.query(`SELECT * FROM comment WHERE comment_id = 1`);
+    const res = await db.query(
+      `SELECT * FROM comment WHERE comment_id = ${testUserIds[0]}`
+    );
     expect(res.rows.length).toEqual(0);
   });
 
@@ -50,7 +59,7 @@ describe("delete", function () {
 /* Get all comments for a post */
 describe("getForPost", function () {
   test("works", async function () {
-    const comments = await Comment.getForPost(1);
+    const comments = await Comment.getForPost(testPostIds[0]);
     expect(comments).toEqual(expect.any(Array));
     expect(comments.length).toEqual(2);
     expect(comments[0].txt_content).toEqual("Test Comment 1");

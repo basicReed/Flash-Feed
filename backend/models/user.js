@@ -8,6 +8,41 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 /** Related functions for users */
 
 class User {
+  /** authenticate user with username, password.
+   *
+   * Returns { username, first_name, last_name, email, image_url }
+   *
+   * Throws UnauthorizedError is user not found or wrong password.
+   **/
+
+  static async authenticate(username, password) {
+    // try to find the user first
+    const result = await db.query(
+      `SELECT username,
+                  password,
+                  first_name AS "firstName",
+                  last_name AS "lastName",
+                  email,
+                  image_url AS "imageUrl"
+           FROM users
+           WHERE username = $1`,
+      [username]
+    );
+
+    const user = result.rows[0];
+
+    if (user) {
+      // compare hashed password to a new hash from password
+      const isValid = await bcrypt.compare(password, user.password);
+      if (isValid === true) {
+        delete user.password;
+        return user;
+      }
+    }
+
+    throw new UnauthorizedError("Invalid username/password");
+  }
+
   /** Create a user
    *
    *  data should be {}
@@ -102,7 +137,7 @@ class User {
 
     // If no user is found, throw a NotFoundError
     const user = userRes.rows[0];
-    if (!user) throw new NotFoundError(`No user: ${username}`);
+    if (!user) throw new NotFoundError(`No user: ${userId}`);
 
     return user;
   }

@@ -19,14 +19,16 @@ class Post {
     await User.getById(data.userId);
 
     // Create Post
-    const results = await db.query(
-      `INSERT INTO post (user_id, txt_content, img_url, is_private)
-            VALUES ($1, $2, $3, $4), 
-            RETURNING post_id, user_id, txt_content AS "txtContent, img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"
-            `,
-      [data.userId, data.txtContent, data.imgUrl, data.isPrivate]
-    );
+    let query = `INSERT INTO post (user_id, txt_content, is_private) VALUES ($1, $2, $3) RETURNING post_id, user_id, txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"`;
 
+    let queryParams = [data.userId, data.txtContent, data.isPrivate];
+
+    if (data.imgUrl) {
+      query = `INSERT INTO post (user_id, txt_content, img_url, is_private) VALUES ($1, $2, $3, $4) RETURNING post_id, user_id, txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"`;
+      queryParams.push(data.imgUrl);
+    }
+
+    const results = await db.query(query, queryParams);
     const post = results.rows[0];
 
     return post;
@@ -34,11 +36,11 @@ class Post {
 
   /** Finds all posts (if public)
    *
-   * Returns [{postId, userId, txtContent, imgUrl, isPrivate, username}]
+   * Returns [{postId, userId, txtContent, imgUrl, isPrivate, username, isLiked, numLikes, numComments, datePosted }]
    */
 
   static async getAll(userId) {
-    const results = db.query(
+    const results = await db.query(
       `
         SELECT post.post_id AS "postId",
                 post.user_id AS "userId",
@@ -47,7 +49,9 @@ class Post {
                 post.is_private AS "isPrivate",
                 users.username,
                 post.date_posted AS "datePosted",
-                (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked"
+                (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+                (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments"
         FROM post
         JOIN users ON post.user_id = users.user_id
         WHERE is_private = $2 OR post.user_id = $1
@@ -59,7 +63,7 @@ class Post {
 
   /** Find all posts by user.
    *
-   * Returns [{ postId, userId, txtContent, imgUrl, isPrivate, dataPosted }]
+   * Returns [{ postId, userId, txtContent, imgUrl, isPrivate, numLikes, numComments, dataPosted }]
    *
    * Throws NotFoundErros if user not found
    */
@@ -69,17 +73,22 @@ class Post {
     await User.getById(userId);
     // Find post by user
 
-    const result = db.query(
+    const result = await db.query(
       `
-        SELECT post_id AS postId,
-                user_id AS userId,
-                txt_content, txtContent,
-                img_url AS imgUrl,
-                is_private AS isPrivate,
-                date_posted AS datePosted
+      SELECT post.post_id AS "postId",
+                post.user_id AS "userId",
+                post.txt_content AS "txtContent",
+                post.img_url AS "imgUrl",
+                post.is_private AS "isPrivate",
+                users.username,
+                post.date_posted AS "datePosted",
+                (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+                (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments"
         FROM post
-        WHERE user_id = $1
-        ORDER BY date_posted
+        JOIN users ON post.user_id = users.user_id
+        WHERE post.user_id = $1
+        ORDER BY post.date_posted
     `,
       [userId]
     );
@@ -95,23 +104,24 @@ class Post {
    * Throws NotFoundError if not found with postId
    */
 
-  static async get(postId, userId) {
-    const result = db.query(
-      ` SELECT p.post_id AS postId,
-            p.user_id AS userId,
-            p.txt_conten AS txtContent,
-            p.img_url AS imgUrl,
-            p.is_private AS isPrivate,
-            p.date_posted AS datePosted,
-            EXISTS (
-                SELECT 1 FROM likes l
-                WHERE l.user_id = $2 AND l.post_id = $1
-              ) AS "isLiked"
-        FROM post p
-        WHERE p.post_id = $1
-        ORDER BY p.date_posted
+  static async get(postId) {
+    const result = await db.query(
+      ` SELECT post.post_id AS "postId",
+                post.user_id AS "userId",
+                post.txt_content AS "txtContent",
+                post.img_url AS "imgUrl",
+                post.is_private AS "isPrivate",
+                users.username,
+                post.date_posted AS "datePosted",
+                (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+                (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments"
+        FROM post
+        JOIN users ON post.user_id = users.user_id
+        WHERE post.post_id = $1
+        ORDER BY post.date_posted
         `,
-      [postId, userId]
+      [postId]
     );
     const post = result.rows[0];
 
@@ -134,7 +144,11 @@ class Post {
               post.txt_content AS "txtContent",
               post.img_url AS "imgUrl",
               post.is_private AS "isPrivate",
-              post.date_posted AS "datePosted"
+              (SELECT username FROM users WHERE user_id = post.user_id) AS "username",
+              post.date_posted AS "datePosted",
+              (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+              (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+              (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments"
       FROM likes
       JOIN post ON likes.post_id = post.post_id
       WHERE likes.user_id = $1`,
@@ -162,7 +176,7 @@ class Post {
                 img_url = $2,
                 is_private = $3
             WHERE post_id = $4
-            RETURNING post_id AS "postId", user_id AS "userId", txt_content AS "txtContent", img_url AS imgUrl, is_private AS "isPrivate", data_posted AS "datePosted" `,
+            RETURNING post_id AS "postId", user_id AS "userId", txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted" `,
       [
         data.txtContent || post.txtContent,
         data.imgUrl || post.imgUrl,
@@ -185,7 +199,7 @@ class Post {
     const result = await db.query(
       `DELETE FROM post
             WHERE post_id = $1
-            RETURNING post_id AS "postId", user_id AS "userId", txt_content AS "txtContent", img_url AS imgUrl, is_private AS "isPrivate", data_posted AS "datePosted" `,
+            RETURNING post_id AS "postId", user_id AS "userId", txt_content AS "txtContent", img_url AS imgUrl, is_private AS "isPrivate", date_posted AS "datePosted" `,
       [postId]
     );
     if (result.rows.length === 0)
