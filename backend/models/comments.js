@@ -42,16 +42,16 @@ class Comment {
    * Throws NotFoundError if comment not found.
    */
 
-  static async delete(id) {
+  static async delete(commentId) {
     const result = await db.query(
       `DELETE FROM comment
        WHERE comment_id = $1
        RETURNING comment_id AS commentId`,
-      [id]
+      [commentId]
     );
     const comment = result.rows[0];
 
-    if (!comment) throw new NotFoundError(`Comment ${id} not found`);
+    if (!comment) throw new NotFoundError(`Comment ${commentId} not found`);
 
     return true;
   }
@@ -64,16 +64,16 @@ class Comment {
    *
    * Throws error if there's an error retrieving the comments
    */
-  static async getForPost(post_id) {
+  static async getForPost(postId) {
     const results = await db.query(
       `SELECT comment.txt_content, users.username
           FROM comment
           JOIN users ON comment.user_id = users.user_id
           WHERE comment.post_id = $1`,
-      [post_id]
+      [postId]
     );
     if (!results.rows[0])
-      throw new NotFoundError(`Error getting comments for post_id: ${post_id}`);
+      throw new NotFoundError(`Error getting comments for post_id: ${postId}`);
 
     const comments = results.rows.map((row) => ({
       txt_content: row.txt_content,

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": ["userId", "txtContent", "isPrivate"],
+  "properties": {
+    "userId": {
+      "type": "integer",
+      "default": 0,
+      "title": "The userId Schema",
+      "examples": [123]
+    },
+    "txtContent": {
+      "type": "string",
+      "default": "",
+      "title": "The txtContent Schema",
+      "examples": ["Hello World"]
+    },
+    "imgUrl": {
+      "type": "string",
+      "default": "",
+      "title": "The imgUrl Schema",
+      "examples": ["https://example.com/image.jpg"]
+    },
+    "isPrivate": {
+      "type": "boolean",
+      "default": false,
+      "title": "The isPrivate Schema",
+      "examples": [false]
+    }
+  },
+  "examples": [
+    {
+      "userId": 123,
+      "txtContent": "Hello World",
+      "imgUrl": "https://example.com/image.jpg",
+      "isPrivate": false
+    }
+  ]
+}
