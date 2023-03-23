@@ -20,12 +20,11 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 describe("create", function () {
-  const newPost = {
-    userId: testUserIds[0],
-    txtContent: "test post",
-  };
-
   test("works", async function () {
+    const newPost = {
+      userId: testUserIds[0],
+      txtContent: "test post",
+    };
     let post = await Post.create(newPost);
     expect(post).toEqual({
       post_id: expect.any(Number),
@@ -68,7 +67,7 @@ describe("getAll", function () {
 
 describe("getAllByUser", function () {
   test("works", async function () {
-    let posts = await Post.getAllByUser(1);
+    let posts = await Post.getAllByUser(testUserIds[0]);
     expect(posts).toEqual([
       {
         postId: testPostIds[0],
@@ -150,8 +149,8 @@ describe("update", function () {
     };
     let post = await Post.update(postId, updateData);
     expect(post).toEqual({
-      postId: testPostIds[0],
-      userId: testPostIds[0],
+      postId: postId,
+      userId: testUserIds[0],
       txtContent: "updated test post body",
       imgUrl: null,
       isPrivate: false,
@@ -162,11 +161,11 @@ describe("update", function () {
       `SELECT post_id, user_id, txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"
               FROM post
               WHERE post_id = $1`,
-      [testPostIds]
+      [postId]
     );
     expect(result.rows.length).toEqual(1);
     expect(result.rows[0]).toEqual({
-      post_id: testPostIds[0],
+      post_id: postId,
       user_id: testUserIds[0],
       txtContent: "updated test post body",
       imgUrl: null,
@@ -200,7 +199,7 @@ describe("delete", function () {
 
 describe("like", function () {
   test("works", async function () {
-    await Post.like(1, 3);
+    await Post.like(testPostIds[0], testUserIds[2]);
     const result = await db.query(
       `SELECT *
               FROM likes

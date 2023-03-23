@@ -16,7 +16,7 @@
       "type": "object",
       "default": {},
       "title": "The data Schema",
-      "required": ["firstName", "lastName", "email", "imageUrl"],
+      "required": [],
       "properties": {
         "firstName": {
           "type": "string",
@@ -36,7 +36,7 @@
           "title": "The email Schema",
           "examples": ["johndoe@example.com"]
         },
-        "imageUrl": {
+        "imgUrl": {
           "type": "string",
           "default": "",
           "title": "The imageUrl Schema",
@@ -48,7 +48,7 @@
           "firstName": "John",
           "lastName": "Doe",
           "email": "johndoe@example.com",
-          "imageUrl": "https://example.com/profile_image.jpg"
+          "imgUrl": "https://example.com/profile_image.jpg"
         }
       ]
     }
@@ -60,7 +60,7 @@
         "firstName": "John",
         "lastName": "Doe",
         "email": "johndoe@example.com",
-        "imageUrl": "https://example.com/profile_image.jpg"
+        "imgUrl": "https://example.com/profile_image.jpg"
       }
     }
   ]

@@ -65,7 +65,6 @@ class Follow {
              WHERE follower_id = $1 AND followed_id = $2`,
       [followerId, followedId]
     );
-    console.log("LENGTH: ", result.rows);
     return result.rows.length > 0;
   }
 

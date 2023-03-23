@@ -4,32 +4,32 @@
   "type": "object",
   "default": {},
   "title": "Root Schema",
-  "required": ["post_id", "user_id", "content"],
+  "required": ["userId", "postId", "txtContent"],
   "properties": {
-    "post_id": {
+    "userId": {
       "type": "integer",
       "default": 0,
-      "title": "The post_id Schema",
-      "examples": [123]
+      "title": "The userId Schema",
+      "examples": [1]
     },
-    "user_id": {
+    "postId": {
       "type": "integer",
       "default": 0,
-      "title": "The user_id Schema",
-      "examples": [456]
+      "title": "The postId Schema",
+      "examples": [4]
     },
-    "content": {
+    "txtContent": {
       "type": "string",
       "default": "",
-      "title": "The content Schema",
-      "examples": ["This is my comment"]
+      "title": "The txtContent Schema",
+      "examples": ["Great post!"]
     }
   },
   "examples": [
     {
-      "post_id": 123,
-      "user_id": 456,
-      "content": "This is my comment"
+      "userId": 1,
+      "postId": 4,
+      "txtContent": "Great post!"
     }
   ]
 }

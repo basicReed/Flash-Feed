@@ -3,7 +3,11 @@
 const bcrypt = require("bcrypt");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 const db = require("../db");
-const { BadRequestError, NotFoundError } = require("../expressError");
+const {
+  UnauthorizedError,
+  BadRequestError,
+  NotFoundError,
+} = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 /** Related functions for users */
 

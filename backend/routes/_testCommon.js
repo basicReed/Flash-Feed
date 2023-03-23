@@ -33,8 +33,6 @@ async function commonBeforeAll() {
 
   testUserIds.splice(0, 0, ...resultsUsers.rows.map((r) => r.user_id));
 
-  //Input test post (set post_id to prevent incrementing)
-
   const resultsPost = await db.query(
     `INSERT INTO post (user_id, txt_content) VALUES ($1, 'test post body')
     RETURNING post_id; `,

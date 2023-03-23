@@ -24,12 +24,14 @@ router.post("/token", async function (req, res, next) {
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
+
       throw new BadRequestError(errs);
     }
 
     const { username, password } = req.body;
     const user = await User.authenticate(username, password);
     const token = createToken(user);
+
     return res.json({ token });
   } catch (err) {
     return next(err);

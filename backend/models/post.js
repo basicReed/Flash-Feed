@@ -19,7 +19,9 @@ class Post {
     await User.getById(data.userId);
 
     // Create Post
-    let query = `INSERT INTO post (user_id, txt_content, is_private) VALUES ($1, $2, $3) RETURNING post_id, user_id, txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"`;
+    let query = `INSERT INTO post (user_id, txt_content, is_private) 
+                  VALUES ($1, $2, $3) 
+                  RETURNING post_id, user_id, txt_content AS "txtContent", img_url AS "imgUrl", is_private AS "isPrivate", date_posted AS "datePosted"`;
 
     let queryParams = [data.userId, data.txtContent, data.isPrivate];
 
@@ -154,8 +156,8 @@ class Post {
       WHERE likes.user_id = $1`,
       [userId]
     );
-
-    return results.rows;
+    const liked = results.rows;
+    return liked;
   }
 
   /** Update post data

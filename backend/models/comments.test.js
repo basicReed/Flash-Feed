@@ -23,11 +23,11 @@ afterAll(commonAfterAll);
 /** Create a comment */
 describe("create", function () {
   test("works", async function () {
-    const newComment = await Comment.create(
-      testPostIds[0],
-      testUserIds[1],
-      "Test comment"
-    );
+    const newComment = await Comment.create({
+      postId: testPostIds[0],
+      userId: testUserIds[1],
+      txtContent: "Test comment",
+    });
     expect(newComment).toEqual(expect.any(Object));
     expect(newComment.commentid).toEqual(expect.any(Number));
     expect(newComment.userid).toEqual(testUserIds[1]);
@@ -62,9 +62,9 @@ describe("getForPost", function () {
     const comments = await Comment.getForPost(testPostIds[0]);
     expect(comments).toEqual(expect.any(Array));
     expect(comments.length).toEqual(2);
-    expect(comments[0].txt_content).toEqual("Test Comment 1");
+    expect(comments[0].txtContent).toEqual("Test Comment 1");
     expect(comments[0].username).toEqual("user1");
-    expect(comments[1].txt_content).toEqual("Test Comment 2");
+    expect(comments[1].txtContent).toEqual("Test Comment 2");
     expect(comments[1].username).toEqual("user2");
   });
 

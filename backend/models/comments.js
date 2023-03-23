@@ -18,13 +18,14 @@ class Comment {
    * Throws error if there's an error creating the comment
    */
 
-  static async create(post_id, user_id, content) {
+  static async create(data) {
+    const { postId, userId, txtContent } = data;
     // create comment
     const result = await db.query(
       `INSERT INTO comment (post_id, user_id, txt_content) 
         VALUES ($1, $2, $3) 
-        RETURNING comment_id AS commentId, user_id AS userId, txt_content AS txtContent, post_id AS postId, date_commented AS dateCommented`,
-      [post_id, user_id, content]
+        RETURNING comment_id AS "commentId", user_id AS "userId", txt_content AS "txtContent", post_id AS "postId", date_commented AS "dateCommented"`,
+      [postId, userId, txtContent]
     );
 
     const comment = result.rows[0];
@@ -46,7 +47,7 @@ class Comment {
     const result = await db.query(
       `DELETE FROM comment
        WHERE comment_id = $1
-       RETURNING comment_id AS commentId`,
+       RETURNING comment_id AS "commentId"`,
       [commentId]
     );
     const comment = result.rows[0];
@@ -66,21 +67,43 @@ class Comment {
    */
   static async getForPost(postId) {
     const results = await db.query(
-      `SELECT comment.txt_content, users.username
+      `SELECT comment.txt_content AS "txtContent", users.username
           FROM comment
           JOIN users ON comment.user_id = users.user_id
           WHERE comment.post_id = $1`,
       [postId]
     );
-    if (!results.rows[0])
+
+    const comments = results.rows;
+
+    if (!comments)
       throw new NotFoundError(`Error getting comments for post_id: ${postId}`);
 
-    const comments = results.rows.map((row) => ({
-      txt_content: row.txt_content,
-      username: row.username,
-    }));
-
     return comments;
+  }
+
+  /** Get a Comment by ID
+   *
+   * commentId: ID of the comment to retrieve
+   *
+   * Returns {Promise<Comment>} - A comment object containing the text content and username of the user who created the comment
+   *
+   * Throws NotFoundError if comment not found.
+   */
+  static async getById(commentId) {
+    const result = await db.query(
+      `SELECT comment_id AS "commentId", user_id AS userId, txt_content AS "txtContent", post_id AS "postId", date_commented AS "dateCommented"
+          FROM comment
+          WHERE comment_id = $1
+          `,
+      [commentId]
+    );
+    const comment = result.rows[0];
+    console.log("COMMENT INFO: ", comment);
+
+    if (!comment) throw new NotFoundError(`Comment ${commentId} not found`);
+
+    return comment;
   }
 }
 
