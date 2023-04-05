@@ -13,7 +13,7 @@ CREATE TABLE users (
 CREATE TABLE post (
     post_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id) NOT NULL,
-    txt_content TEXT NOT NULL,
+    txt_content TEXT VARCHAR(1000) NOT NULL ,
     img_url VARCHAR(1000),
     is_private BOOLEAN DEFAULT false,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP

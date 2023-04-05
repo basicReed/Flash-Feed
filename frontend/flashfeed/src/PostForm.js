@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import "./PostForm.css";
 import FlashFeedApi from "./Api";
+
+const MAX_CHARACTERS = 1000;
 
 const PostForm = ({ onPost }) => {
   const [txtContent, setTextContent] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
   const handleTextChange = (event) => {
-    setTextContent(event.target.value);
+    const value = event.target.value;
+    if (value.length <= MAX_CHARACTERS) {
+      setTextContent(value);
+    }
   };
 
   const handlePrivateChange = (event) => {
@@ -25,13 +31,17 @@ const PostForm = ({ onPost }) => {
     setIsPrivate(false);
   };
 
+  const remainingChars = MAX_CHARACTERS - txtContent.length;
+
   return (
     <div className="post-form">
-      <textarea
-        placeholder="What's up?"
-        value={txtContent}
-        onChange={handleTextChange}
-      />
+      <GrammarlyEditorPlugin clientId="client_Ey7sNT8Qtf8v9eZMzZCTPF">
+        <textarea
+          placeholder="What's up?"
+          value={txtContent}
+          onChange={handleTextChange}
+        />
+      </GrammarlyEditorPlugin>
       <div className="post-form-options">
         <label>
           <input
@@ -41,6 +51,7 @@ const PostForm = ({ onPost }) => {
           />
           Private
         </label>
+        <span className="post-char-counter">{remainingChars}</span>
       </div>
       <button onClick={handlePost}>Post</button>
     </div>

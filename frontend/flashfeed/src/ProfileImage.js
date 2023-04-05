@@ -3,37 +3,14 @@ import "./ProfileImage.css";
 import backupUserImg from "./backupUserImg.jpeg";
 
 const ProfileImage = ({ imageUrl }) => {
-  const [imgSrc, setImgSrc] = useState(imageUrl);
-
-  const checkImgSrc = (src) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = src;
-    });
-  };
-
-  const onError = async () => {
-    try {
-      const isValidImg = await checkImgSrc(imageUrl);
-      if (!isValidImg) {
-        setImgSrc(backupUserImg);
-      }
-    } catch (error) {
-      setImgSrc(backupUserImg);
-    }
-  };
-
   return (
     <div className="profile-image-container">
       <img
         className="profile-image"
-        src={imgSrc}
+        src={imageUrl || backupUserImg}
         alt="Profile"
         onError={(e) => {
-          e.target.onError = null;
-          onError();
+          e.target.src = backupUserImg;
         }}
       />
     </div>
