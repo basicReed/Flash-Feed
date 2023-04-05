@@ -13,6 +13,9 @@ const {
   commonAfterAll,
   testUserIds,
   testPostIds,
+  u1Token,
+  u2Token,
+  u3Token,
   testCommentIds,
 } = require("./_testCommon");
 
@@ -30,7 +33,7 @@ describe("GET /posts", function () {
   });
 });
 
-describe("GET /posts/:id", function () {
+describe("GET /posts/:postId", function () {
   test("Get a single post by ID", async function () {
     const response = await request(app).get(`/posts/${testPostIds[0]}`);
     expect(response.statusCode).toBe(200);
@@ -62,7 +65,7 @@ describe("POST /posts", function () {
   });
 });
 
-describe("PATCH /posts/:id", function () {
+describe("PATCH /posts/:postId", function () {
   test("PATCH a single post by user", async function () {
     const response = await request(app).patch(`/posts/${testPostIds[0]}`).send({
       postId: testPostIds[0],
@@ -87,12 +90,16 @@ describe("DELETE /posts/:id", function () {
   });
 });
 
+// Test Likes
 describe("POST /posts/like", function () {
   test("LIKE a post from a user", async function () {
-    const response = await request(app).post("/posts/like").send({
-      postId: testPostIds[0],
-      userId: testUserIds[2],
-    });
+    const response = await request(app)
+      .post("/posts/like")
+      .send({
+        postId: testPostIds[0],
+        userId: testUserIds[2],
+      })
+      .set("authorization", `Bearer ${u3Token}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe("Post liked");

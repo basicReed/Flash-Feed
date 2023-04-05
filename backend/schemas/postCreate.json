@@ -4,14 +4,8 @@
   "type": "object",
   "default": {},
   "title": "Root Schema",
-  "required": ["userId", "txtContent", "isPrivate"],
+  "required": ["txtContent", "isPrivate"],
   "properties": {
-    "userId": {
-      "type": "integer",
-      "default": 0,
-      "title": "The userId Schema",
-      "examples": [123]
-    },
     "txtContent": {
       "type": "string",
       "default": "",

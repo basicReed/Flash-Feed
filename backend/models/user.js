@@ -22,7 +22,8 @@ class User {
   static async authenticate(username, password) {
     // try to find the user first
     const result = await db.query(
-      `SELECT username,
+      `SELECT user_id AS "userId",
+                  username,
                   password,
                   first_name AS "firstName",
                   last_name AS "lastName",
@@ -64,7 +65,7 @@ class User {
   }) {
     // Check if the user already exists in the database
     const duplicateCheck = await db.query(
-      `SELECT username 
+      `SELECT username
             FROM users
             WHERE username = $1`,
       [username]
@@ -80,14 +81,15 @@ class User {
     // Insert the new user into the database
     const result = await db.query(
       `INSERT INTO users
-              (username,
+              (
+                username,
                   password,
                   first_name,
                   last_name,
                   email,
                   image_url)
                   VALUES ($1, $2, $3, $4, $5, $6)
-                  RETURNING username, first_name AS "firstName", last_name AS "lastName", email, image_url AS "imageUrl"`,
+                  RETURNING user_id AS "userId", username, first_name AS "firstName", last_name AS "lastName", email, image_url AS "imageUrl"`,
       [username, hashedPassword, firstName, lastName, email, imageUrl]
     );
 
@@ -102,20 +104,23 @@ class User {
    */
 
   static async get(username) {
-    // Find the user in the database using their username
     const userRes = await db.query(
-      `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  image_url AS "imageUrl"
-          FROM users
-          WHERE username = $1`,
+      `SELECT user_id AS "userId",
+              username,
+              first_name AS "firstName",
+              last_name AS "lastName",
+              email,
+              image_url AS "profileImage",
+              (SELECT COUNT(*) FROM post WHERE user_id = users.user_id) AS "postCount",
+              (SELECT COUNT(*) FROM follow WHERE followed_id = users.user_id) AS "followersCount",
+              (SELECT COUNT(*) FROM follow WHERE follower_id = users.user_id) AS "followingCount"
+        FROM users
+        WHERE username = $1`,
       [username]
     );
 
-    // If no user is found, throw a NotFoundError
     const user = userRes.rows[0];
+    console.log("USER INFO: ", user);
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
     return user;
@@ -133,7 +138,7 @@ class User {
                   first_name AS "firstName",
                   last_name AS "lastName",
                   email,
-                  image_url AS "imageUrl"
+                  image_url AS "profileImage"
           FROM users
           WHERE user_id = $1`,
       [userId]
@@ -187,6 +192,30 @@ class User {
     delete user.password;
 
     return user;
+  }
+
+  /** Search for users by username, first name, or last name
+   *
+   * Returns [{ userId, username, firstName, lastName, imageUrl }, ...]
+   * Ordered by closest matches first.
+   */
+  static async searchUsers(searchTerm) {
+    // Search for users by username, first name, or last name
+    console.log("HELLOOOOO");
+    const query = `
+        SELECT user_id AS "userId", username, first_name AS "firstName",
+               last_name AS "lastName", image_url AS "profileImage"
+        FROM users
+        WHERE username ILIKE $1
+          OR first_name ILIKE $1
+          OR last_name ILIKE $1
+        ORDER BY (username ILIKE $1) DESC,
+                 (first_name ILIKE $1) DESC,
+                 (last_name ILIKE $1) DESC
+      `;
+    const result = await db.query(query, [`%${searchTerm}%`]);
+    console.log(result.rows);
+    return result.rows;
   }
 }
 

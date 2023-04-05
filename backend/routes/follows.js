@@ -19,20 +19,20 @@ const followRemoveSchema = require("../schemas/followRemove.json");
  * Authorization required: logged in user
  */
 
-router.post("/add", async function (req, res, next) {
+router.post("/toggle", async function (req, res, next) {
   try {
-    const validator = jsonschema.validate(req.body, followAddSchema);
-    if (!validator.valid) {
-      const errors = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errors);
-    }
-
-    const { followerId, followedId } = req.body;
-    // if (req.user.id !== followerId) {
-    //   throw new BadRequestError("Logged in user does not match follower_id");
+    // const validator = jsonschema.validate(req.body, followAddSchema);
+    // if (!validator.valid) {
+    //   const errors = validator.errors.map((e) => e.stack);
+    //   throw new BadRequestError(errors);
     // }
 
-    const follow = await Follow.add(followerId, followedId);
+    const { followerUsername, followedUsername } = req.body;
+
+    const follow = await Follow.toggleFollow(
+      followerUsername,
+      followedUsername
+    );
     return res.json({ follow });
   } catch (err) {
     return next(err);
@@ -63,17 +63,18 @@ router.delete("/remove", async function (req, res, next) {
  */
 
 router.get("/is-following", async function (req, res, next) {
+  // const validator = jsonschema.validate(req.body, followIsFollowingSchema);
+  // if (!validator.valid) {
+  //   const errors = validator.errors.map((e) => e.stack);
+  //   throw new BadRequestError(errors);
+  // }
+
   try {
-    const validator = jsonschema.validate(req.body, followIsFollowingSchema);
-    if (!validator.valid) {
-      const errors = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errors);
-    }
-
-    const { followerId, followedId } = req.body;
-
-    const isFollowing = await Follow.isFollowing(followerId, followedId);
-
+    const { followerUsername, followedUsername } = req.query; // Extract variables from query string
+    const isFollowing = await Follow.isFollowing(
+      followerUsername,
+      followedUsername
+    );
     return res.json({ isFollowing });
   } catch (err) {
     return next(err);
@@ -110,9 +111,9 @@ router.get("/:id/followed", async function (req, res, next) {
 
 router.get("/:id/followers", async function (req, res, next) {
   try {
-    const userId = Number(req.params.id);
-    const followers = await Follow.getFollowers(userId);
-    return res.json({ followers });
+    const userId = parseInt(req.params.id);
+    const users = await Follow.getFollowers(userId);
+    return res.json({ users });
   } catch (err) {
     return next(err);
   }

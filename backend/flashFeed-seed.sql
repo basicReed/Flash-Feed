@@ -6,12 +6,12 @@ INSERT INTO users (username, first_name, last_name, email, password, image_url) 
     ('alice_smith', 'Alice', 'Smith', 'alice@example.com', 'password321', 'https://example.com/alice_smith.png');
 
 -- Insert posts
-INSERT INTO post (user_id, txt_content, img_url, is_private, date_posted) VALUES 
-    (1, 'My first post!', 'https://example.com/post1.png', false, '2022-01-01 12:00:00'),
-    (1, 'Heres another post', 'https://example.com/post2.png', false, '2022-01-02 12:00:00'),
-    (2, 'Hello world!', null, false, '2022-01-03 12:00:00'),
-    (2, 'I love SQL', null, false, '2022-01-04 12:00:00'),
-    (3, 'This is my first post', 'https://example.com/post3.png', false, '2022-01-05 12:00:00');
+INSERT INTO post (user_id, txt_content,  is_private, date_posted) VALUES 
+    (1, 'My first post!',  false, '2022-01-01 12:00:00'),
+    (1, 'Heres another post',  false, '2022-01-02 12:00:00'),
+    (2, 'Hello world!',  false, '2022-01-03 12:00:00'),
+    (2, 'I love SQL', false, '2022-01-04 12:00:00'),
+    (3, 'This is my first post',  false, '2022-01-05 10:00:00');
 
 
 -- Insert likes

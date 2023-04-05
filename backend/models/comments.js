@@ -20,18 +20,45 @@ class Comment {
 
   static async create(data) {
     const { postId, userId, txtContent } = data;
-    // create comment
-    const result = await db.query(
-      `INSERT INTO comment (post_id, user_id, txt_content) 
-        VALUES ($1, $2, $3) 
-        RETURNING comment_id AS "commentId", user_id AS "userId", txt_content AS "txtContent", post_id AS "postId", date_commented AS "dateCommented"`,
-      [postId, userId, txtContent]
-    );
 
-    const comment = result.rows[0];
-    if (!comment) throw new Error(`Error creating comment: ${err.message}`);
+    try {
+      // create comment
+      const result = await db.query(
+        `INSERT INTO comment (post_id, user_id, txt_content) 
+          VALUES ($1, $2, $3) 
+          RETURNING comment_id AS "commentId", user_id, txt_content, post_id, date_commented`,
+        [postId, userId, txtContent]
+      );
 
-    return comment;
+      const comment = result.rows[0];
+
+      if (!comment) throw new Error(`Error creating comment: ${txtContent}`);
+
+      // get user and post info for comment
+      const query = `
+        SELECT 
+          comment.txt_content AS "txtContent", 
+          comment.comment_id AS "commentId",
+          comment.post_id AS "postId",
+          comment.date_commented AS "dateCommented",
+          users.user_id AS "userId",
+          users.image_url AS "profileImgUrl",
+          users.username
+        FROM comment
+        JOIN users ON comment.user_id = users.user_id
+        WHERE comment.comment_id = $1
+      `;
+      const res = await db.query(query, [comment.commentId]);
+
+      const newComment = res.rows[0];
+      if (!newComment)
+        throw new Error(`Error getting comment info: ${comment.commentId}`);
+
+      return newComment;
+    } catch (err) {
+      console.error("Error creating comment:", err);
+      throw new Error(`Error creating comment: ${err.message}`);
+    }
   }
 
   /** Delete a Comment
@@ -67,10 +94,19 @@ class Comment {
    */
   static async getForPost(postId) {
     const results = await db.query(
-      `SELECT comment.txt_content AS "txtContent", users.username
-          FROM comment
-          JOIN users ON comment.user_id = users.user_id
-          WHERE comment.post_id = $1`,
+      `SELECT 
+      comment.txt_content AS "txtContent", 
+      comment.comment_id AS "commentId",
+      comment.post_id AS "postId",
+      comment.date_commented AS "dateCommented",
+      users.user_id AS "userId",
+      users.image_url AS "profileImgUrl",
+      users.username
+    FROM comment
+    JOIN users ON comment.user_id = users.user_id
+    WHERE comment.post_id = $1
+    ORDER BY comment.date_commented ASC
+    `,
       [postId]
     );
 
@@ -99,7 +135,6 @@ class Comment {
       [commentId]
     );
     const comment = result.rows[0];
-    console.log("COMMENT INFO: ", comment);
 
     if (!comment) throw new NotFoundError(`Comment ${commentId} not found`);
 

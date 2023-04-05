@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const db = require("../db");
 const { BCRYPT_WORK_FACTOR } = require("../config");
+const { createToken } = require("../helpers/tokens");
 
 const testUserIds = [];
 const testPostIds = [];
@@ -82,11 +83,22 @@ async function commonAfterAll() {
   await db.end();
 }
 
+// Test tokens
+// Call: res.locals.user.username
+const u1Token = createToken({ username: "user1", userId: testUserIds[0] });
+const u2Token = createToken({ username: "user2", userId: testUserIds[1] });
+const u3Token = createToken({ username: "user3", userId: testUserIds[2] });
+
+console.log("u1Token: ", u1Token);
+
 module.exports = {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  u1Token,
+  u2Token,
+  u3Token,
   testUserIds,
   testPostIds,
   testCommentIds,

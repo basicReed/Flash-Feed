@@ -66,10 +66,19 @@ describe("POST /users", () => {
       email: "newuser@example.com",
       imageUrl: "image.jpg",
     });
-    console.log(response.body.user);
 
     expect(response.statusCode).toBe(201);
-    expect(response.body.user.username).toBe("newuser");
+    expect(response.body).toEqual({
+      user: {
+        userId: expect.any(Number),
+        username: "newuser",
+        firstName: "New",
+        lastName: "User",
+        email: "newuser@example.com",
+        imageUrl: "image.jpg",
+      },
+      token: expect.any(String),
+    });
   });
 
   test("Return 400 if missing required fields", async () => {

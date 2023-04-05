@@ -1,0 +1,81 @@
+.post {
+  margin: 20px 0;
+
+  border-top: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
+
+  /* border-radius: 16px; */
+  padding: 16px;
+  background-color: white;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+}
+
+.post-header :hover {
+  cursor: pointer;
+}
+.post-header img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.post-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-top: 4px;
+  margin-bottom: 0px;
+}
+
+.post-info p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #657786;
+  margin-top: 0px;
+  margin-bottom: 4px;
+}
+
+.post-body p {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  margin: 2px 10px 16px 54px;
+}
+
+.post-body img {
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 16px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-actions button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #657786;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.post-actions button i {
+  margin-right: 4px;
+}
+
+.post-actions button:hover {
+  color: #1da1f2;
+}

@@ -5,6 +5,8 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
+const User = require("../models/user");
+const Post = require("../models/post");
 
 /** Middleware: Authenticate user.
  *
@@ -47,12 +49,49 @@ function ensureLoggedIn(req, res, next) {
  *  If not, raises Unauthorized.
  */
 
-function ensureCorrectUser(req, res, next) {
+// function ensureCorrectUser(req, res, next) {
+//   try {
+//     const user = res.locals.user;
+//     console.log("USER: ", user);
+//     if (!(user && user.username === req.params.username)) {
+//       throw new UnauthorizedError();
+//     }
+//     return next();
+//   } catch (err) {
+//     return next(err);
+//   }
+// }
+
+async function ensureCorrectUser(req, res, next) {
   try {
-    const user = res.locals.user;
-    if (!(user && user.username === req.params.username)) {
-      throw new UnauthorizedError();
+    const userId = parseInt(req.params.userId) || parseInt(req.body.userId);
+    const postId = parseInt(req.params.postId) || parseInt(req.body.postId);
+    const username = req.params.username;
+    const currUser = res.locals.user;
+
+    console.log("userID: ", userId);
+    console.log("postID: ", postId);
+    console.log("username: ", username);
+    console.log("currentUser: ", currUser);
+
+    if (username) {
+      if (!(currUser && currUser.username === req.params.username)) {
+        throw new UnauthorizedError();
+      }
+    } else if (userId) {
+      const fetchedUser = await User.getById(userId);
+      if (fetchedUser.username !== currUser.username) {
+        throw new UnauthorizedError();
+      }
+    } else if (postId) {
+      const post = await Post.get(postId);
+      if (post.userId !== currUser.id) {
+        throw new UnauthorizedError();
+      }
+    } else {
+      throw new BadRequestError();
     }
+
     return next();
   } catch (err) {
     return next(err);

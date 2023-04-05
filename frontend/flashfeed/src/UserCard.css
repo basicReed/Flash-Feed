@@ -1,0 +1,74 @@
+.user-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  margin: 16px auto;
+}
+
+.user-card .user {
+  display: flex;
+}
+.user-card .user :hover {
+  cursor: pointer;
+}
+
+.user-card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.user-card .user-info {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1; */
+  overflow: hidden;
+}
+
+.user-card .username h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card .user-info p {
+  font-size: 14px;
+  color: gray;
+  margin: 4px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card .follow-button {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #1da1f2;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.user-card .follow-button:hover {
+  background-color: #0c8bff;
+}
+
+@media screen and (min-width: 600px) {
+  .user-card {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

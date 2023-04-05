@@ -1,0 +1,66 @@
+/* CSS for Twitter-style navbar */
+
+/* Set background color for navbar */
+.navbar {
+  position: fixed;
+  background-color: none;
+}
+
+.navbar-nav {
+  list-style: none;
+}
+
+/* Set color for links in navbar */
+.nav-link {
+  text-decoration: none;
+  color: #15202b;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+}
+
+/* Set hover and active styles for links */
+.nav-link:hover,
+.nav-link:focus {
+  color: #1da1f2;
+  background-color: transparent;
+}
+
+.nav-link.active {
+  color: #1da1f2;
+  background-color: transparent;
+}
+
+/* Style the toggler icon */
+.navbar-toggler {
+  border-color: #d9d9d9;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0,0,0,.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Media query for hamburger menu */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding: 10px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+  }
+
+  .nav-item {
+    margin-bottom: 10px;
+  }
+}
+
+/* Set vertical spacing between li elements */
+.navbar-nav li {
+  margin-bottom: 30px;
+}
+
+/* Add spacing between icon and text */
+.navbar-nav .nav-link svg {
+  margin-right: 12px;
+}

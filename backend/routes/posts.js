@@ -4,18 +4,23 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 const router = new express.Router();
 const { BadRequestError } = require("../expressError");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+
 const Post = require("../models/post");
 const postGetLikedSchema = require("../schemas/postGetLiked.json");
 const postGetByUserSchema = require("../schemas/postGetByUser.json");
 const postGetAllSchema = require("../schemas/postGetAll.json");
 const postGetSchema = require("../schemas/postGet.json");
 const postCreateSchema = require("../schemas/postCreate.json");
+const jwt = require("jsonwebtoken");
+const { token } = require("morgan");
 
 // GET /posts
-// Returns list of all posts
+// Returns list of all posts or posts from a specific user
 router.get("/", async function (req, res, next) {
   try {
-    const posts = await Post.getAll();
+    const { user: userId, page: pageNum } = req.query;
+    const posts = await Post.getAll(userId, pageNum);
     return res.json({ posts });
   } catch (err) {
     return next(err);
@@ -24,10 +29,12 @@ router.get("/", async function (req, res, next) {
 
 // GET /posts/:id
 // Returns details of a single post by ID
-router.get("/:id", async function (req, res, next) {
+router.get("/:postId", async function (req, res, next) {
   try {
-    const { id } = req.params;
-    const post = await Post.get(id);
+    const { postId } = req.params;
+    const { userId } = req.query;
+
+    const post = await Post.get(userId, postId);
     return res.json({ post });
   } catch (err) {
     return next(err);
@@ -39,8 +46,9 @@ router.get("/:id", async function (req, res, next) {
 router.get("/:userId/liked", async function (req, res, next) {
   try {
     const userId = req.params.userId;
-    const liked = await Post.getLiked(userId);
-    return res.json({ liked });
+    const posts = await Post.getLiked(userId);
+
+    return res.json({ posts });
   } catch (err) {
     return next(err);
   }
@@ -48,15 +56,17 @@ router.get("/:userId/liked", async function (req, res, next) {
 
 // GET /posts/user/:username
 // Returns list of all posts by a specific user by username
-router.get("/user/:username", async function (req, res, next) {
+router.get("/user/:userId", async function (req, res, next) {
   try {
-    const { username } = req.params;
-    const validator = jsonschema.validate(req.body, postGetByUserSchema);
-    if (!validator.valid) {
-      const errors = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errors);
-    }
-    const posts = await Post.getByUser(username);
+    const { userId } = req.params;
+
+    // const validator = jsonschema.validate(req.body, postGetByUserSchema);
+    // if (!validator.valid) {
+    //   const errors = validator.errors.map((e) => e.stack);
+    //   throw new BadRequestError(errors);
+    // }
+    const posts = await Post.getAllByUser(userId);
+
     return res.json({ posts });
   } catch (err) {
     return next(err);
@@ -72,7 +82,12 @@ router.post("/", async function (req, res, next) {
       const errors = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errors);
     }
-    const post = await Post.create(req.body);
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = jwt.decode(token);
+
+    const postData = { ...req.body, userId: user.userId };
+    const post = await Post.create(postData);
     return res.status(201).json({ post });
   } catch (err) {
     return next(err);
@@ -98,9 +113,9 @@ router.patch("/:postId", async function (req, res, next) {
 
 // DELETE /posts/:id
 // Deletes a post by ID
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:postId", async function (req, res, next) {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = parseInt(req.params.postId);
 
     await Post.delete(postId);
     return res.json({ deleted: postId });
@@ -124,40 +139,39 @@ router.delete("/:id", async function (req, res, next) {
  * - 401 if user is not logged in
  * - 404 if post not found
  */
-router.post("/like", async function (req, res, next) {
+router.post("/like", ensureCorrectUser, async function (req, res, next) {
   try {
     const { postId, userId } = req.body;
 
-    await Post.like(postId, userId);
+    const like = await Post.likeOrUnlike(postId, userId);
 
-    return res.json({ message: "Post liked" });
+    return res.json({ like });
   } catch (err) {
     return next(err);
   }
 });
 
 /**
- * Route for unliking a post
+ * Route for bookmarking a post
  *
- * POST /posts/:id/unlike
+ * POST /posts/:id/bookmark
  *
- * Request body: {}
+ * Request body: { userId }
  *
  * Authorization required: login
  *
- * Returns: {message: "Post unliked"}
+ * Returns: { message: "Post bookmarked" }
  *
  * Errors:
  * - 401 if user is not logged in
  * - 404 if post not found
  */
-router.post("/unlike", async function (req, res, next) {
+router.post("/bookmark", async function (req, res, next) {
   try {
-    const { postId, userId } = req.body;
+    const { userId, postId } = req.body;
 
-    await Post.unlike(postId, userId);
-
-    return res.json({ message: "Post unliked" });
+    const bookmark = await Post.bookmark(userId, postId);
+    return res.json({ bookmark });
   } catch (err) {
     return next(err);
   }
