@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FlashFeedApi from "./Api";
 import UserCard from "./UserCard";
+import LoadingIcon from "./LoadingIcon";
 import Post from "./Post";
 
 const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
@@ -9,9 +10,11 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [likes, setLikes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getTabData() {
+      setIsLoading(true);
       let tabData = [];
 
       switch (activeTab) {
@@ -35,6 +38,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
         default:
           break;
       }
+      setIsLoading(false);
     }
     getTabData();
   }, [activeTab]);
@@ -43,6 +47,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
     case "posts":
       content = (
         <div>
+          {isLoading && <LoadingIcon />}
           {posts &&
             posts.map((post) => (
               <Post key={post.postId} user={user} {...post} />
@@ -53,6 +58,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
     case "following":
       content = (
         <div className="profile-content-follow">
+          {isLoading && <LoadingIcon />}
           {following &&
             following.map((followed) => (
               <UserCard
@@ -66,6 +72,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
     case "followers":
       content = (
         <div className="profile-content-follow">
+          {isLoading && <LoadingIcon />}
           {followers &&
             followers.map((follows) => (
               <UserCard
@@ -79,6 +86,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
     case "likes":
       content = (
         <div>
+          {isLoading && <LoadingIcon />}
           {likes && likes.map((post) => <Post key={post.postId} {...post} />)}
         </div>
       );

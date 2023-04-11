@@ -16,6 +16,8 @@ import FlashFeed from "./FlashFeed";
 import Bookmarks from "./Bookmarks";
 import Profile from "./Profile";
 import PostAndComments from "./PostAndComments";
+import LoadingIcon from "./LoadingIcon";
+
 import FlashFeedApi from "./Api";
 import NavBar from "./NavBar";
 import { Provider } from "react-redux";
@@ -42,10 +44,12 @@ function App() {
           let userData = await FlashFeedApi.getUser(username);
           console.log("USER DATA: ", userData);
           setUser(userData);
-          setIsLoading(false);
-          console.log(userData);
+          // setIsLoading(false);
+          // console.log(userData);
         } catch (error) {
           console.log(error);
+        } finally {
+          setIsLoading(false);
         }
       }
       fetchData();
@@ -73,9 +77,9 @@ function App() {
     setIsAuthenticated(false);
   }
 
-//////////////////////////////////////////
-///// Routes//////////////////////////////
-//////////////////////////////////////////
+  //////////////////////////////////////////
+  ///// Routes//////////////////////////////
+  //////////////////////////////////////////
   return (
     <div className="App-background">
       <AuthContext.Provider
@@ -86,7 +90,7 @@ function App() {
         }}
       >
         <BrowserRouter>
-          {/* {isLoading ? <Loading /> : null} */}
+          {/* {isLoading ? <LoadingIcon /> : null} */}
           {/* {isAuthenticated ? <NavBar /> : null} */}
           <Routes>
             <Route path="/" exact="true" element={<Navigate to="/login" />} />

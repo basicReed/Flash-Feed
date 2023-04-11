@@ -7,6 +7,7 @@ import SearchPanel from "./SearchPanel";
 import CommentPopup from "./PostAndComments";
 import Bookmarks from "./Bookmarks";
 import Profile from "./Profile";
+import LoadingIcon from "./LoadingIcon";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import FlashFeedApi from "./Api";
@@ -51,7 +52,7 @@ function FlashFeed({ user }) {
         getPosts();
       }}
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
+      loader={<LoadingIcon />}
       endMessage={
         <p style={{ textAlign: "center" }}>
           <b>Yay! You have seen it all</b>
