@@ -51,9 +51,9 @@ class FlashFeedApi {
     return response.data.users;
   }
 
-  static async toggleFollow(followerUsername, followedUsername) {
+  static async toggleFollow(username, followedUsername) {
     let token = localStorage.getItem("token");
-    const data = { followerUsername, followedUsername };
+    const data = { username, followedUsername };
     let response = await axios.post(`${BASE_API_URL}/follows/toggle`, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -109,9 +109,10 @@ class FlashFeedApi {
 
   static async post(txtContent, isPrivate, imgUrl) {
     try {
+      const username = localStorage.getItem("username");
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-      const data = { txtContent, isPrivate, imgUrl };
+      const data = { txtContent, isPrivate, imgUrl, username };
       const response = await axios.post(`${BASE_API_URL}/posts`, data, {
         headers,
       });

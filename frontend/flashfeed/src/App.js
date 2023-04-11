@@ -72,6 +72,10 @@ function App() {
     setUser({});
     setIsAuthenticated(false);
   }
+
+//////////////////////////////////////////
+///// Routes//////////////////////////////
+//////////////////////////////////////////
   return (
     <div className="App-background">
       <AuthContext.Provider

@@ -108,7 +108,7 @@ const Post = (props) => {
             <i className="far fa-bookmark"></i>
           )}
         </button>
-        <button onClick={handleLike}>
+        <button onClick={handleLike} className="post-like-btn">
           {liked ? (
             <>
               <i className="fas fa-heart" style={{ color: "red" }}></i>

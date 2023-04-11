@@ -6,6 +6,8 @@ const jsonschema = require("jsonschema");
 
 const express = require("express");
 const { BadRequestError } = require("../expressError");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+
 const User = require("../models/user");
 const Post = require("../models/post");
 
@@ -16,7 +18,7 @@ const userUpdateSchema = require("../schemas/userUpdate.json");
 const router = new express.Router();
 
 // Get all users
-router.get("/", async function (req, res, next) {
+router.get("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const users = await User.getAll();
     return res.json({ users });
@@ -78,20 +80,25 @@ router.post("/", async function (req, res, next) {
 });
 
 // Update a user by ID
-router.patch("/:username", async function (req, res, next) {
-  try {
-    const validator = jsonschema.validate(req.body, userUpdateSchema);
+router.patch(
+  "/:username",
+  ensureLoggedIn,
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      const validator = jsonschema.validate(req.body, userUpdateSchema);
 
-    if (!validator.valid) {
-      const errors = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errors);
+      if (!validator.valid) {
+        const errors = validator.errors.map((e) => e.stack);
+        throw new BadRequestError(errors);
+      }
+      const user = await User.update(req.params.username, req.body);
+      return res.json({ user });
+    } catch (err) {
+      return next(err);
     }
-    const user = await User.update(req.params.username, req.body);
-    return res.json({ user });
-  } catch (err) {
-    return next(err);
   }
-});
+);
 
 /**
  * Route for getting bookmarked posts by user ID
@@ -106,15 +113,20 @@ router.patch("/:username", async function (req, res, next) {
  * - 401 if user is not logged in
  * - 404 if user not found
  */
-router.get("/:userId/bookmarked", async function (req, res, next) {
-  try {
-    const { userId } = req.params;
+router.get(
+  "/:userId/bookmarked",
+  ensureCorrectUser,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const { userId } = req.params;
 
-    const posts = await Post.getBookmarked(userId);
-    return res.json({ posts });
-  } catch (err) {
-    return next(err);
+      const posts = await Post.getBookmarked(userId);
+      return res.json({ posts });
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 module.exports = { router };

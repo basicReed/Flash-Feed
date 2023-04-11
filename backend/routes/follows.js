@@ -3,7 +3,7 @@ const express = require("express");
 const router = new express.Router();
 const { BadRequestError } = require("../expressError");
 const Follow = require("../models/follows");
-const { ensureLoggedIn } = require("../middleware/auth");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 const followAddSchema = require("../schemas/followAdd.json");
 const followFollowedUsersSchema = require("../schemas/followFollowedUsers.json");
 const followGetFollowersSchema = require("../schemas/followGetFollowers.json");
@@ -19,41 +19,27 @@ const followRemoveSchema = require("../schemas/followRemove.json");
  * Authorization required: logged in user
  */
 
-router.post("/toggle", async function (req, res, next) {
-  try {
-    // const validator = jsonschema.validate(req.body, followAddSchema);
-    // if (!validator.valid) {
-    //   const errors = validator.errors.map((e) => e.stack);
-    //   throw new BadRequestError(errors);
-    // }
+router.post(
+  "/toggle",
+  ensureLoggedIn,
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      // const validator = jsonschema.validate(req.body, followAddSchema);
+      // if (!validator.valid) {
+      //   const errors = validator.errors.map((e) => e.stack);
+      //   throw new BadRequestError(errors);
+      // }
 
-    const { followerUsername, followedUsername } = req.body;
+      const { username, followedUsername } = req.body;
 
-    const follow = await Follow.toggleFollow(
-      followerUsername,
-      followedUsername
-    );
-    return res.json({ follow });
-  } catch (err) {
-    return next(err);
-  }
-});
-
-router.delete("/remove", async function (req, res, next) {
-  try {
-    const validator = jsonschema.validate(req.body, followRemoveSchema);
-    if (!validator.valid) {
-      const errors = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errors);
+      const follow = await Follow.toggleFollow(username, followedUsername);
+      return res.json({ follow });
+    } catch (err) {
+      return next(err);
     }
-
-    const { followerId, followedId } = req.body;
-    const result = await Follow.remove(followerId, followedId);
-    return res.json({ deleted: result });
-  } catch (err) {
-    return next(err);
   }
-});
+);
 
 /** GET /follows/is-following
  *
@@ -62,7 +48,7 @@ router.delete("/remove", async function (req, res, next) {
  * Authorization required: logged in user
  */
 
-router.get("/is-following", async function (req, res, next) {
+router.get("/is-following", ensureLoggedIn, async function (req, res, next) {
   // const validator = jsonschema.validate(req.body, followIsFollowingSchema);
   // if (!validator.valid) {
   //   const errors = validator.errors.map((e) => e.stack);
@@ -90,7 +76,7 @@ router.get("/is-following", async function (req, res, next) {
  * Authorization required: logged in user
  */
 
-router.get("/:id/followed", async function (req, res, next) {
+router.get("/:id/followed", ensureLoggedIn, async function (req, res, next) {
   try {
     const userId = parseInt(req.params.id);
     const users = await Follow.getFollowedUsers(userId);
@@ -109,7 +95,7 @@ router.get("/:id/followed", async function (req, res, next) {
  * Authorization required: logged in user
  */
 
-router.get("/:id/followers", async function (req, res, next) {
+router.get("/:id/followers", ensureLoggedIn, async function (req, res, next) {
   try {
     const userId = parseInt(req.params.id);
     const users = await Follow.getFollowers(userId);

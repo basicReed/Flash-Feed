@@ -4,7 +4,7 @@
 
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 const User = require("../models/user");
 const Post = require("../models/post");
 
@@ -66,16 +66,16 @@ async function ensureCorrectUser(req, res, next) {
   try {
     const userId = parseInt(req.params.userId) || parseInt(req.body.userId);
     const postId = parseInt(req.params.postId) || parseInt(req.body.postId);
-    const username = req.params.username;
+    const username = req.params.username || req.body.username;
     const currUser = res.locals.user;
 
     console.log("userID: ", userId);
     console.log("postID: ", postId);
     console.log("username: ", username);
-    console.log("currentUser: ", currUser);
+    console.log("currentUser: ", currUser.username);
 
     if (username) {
-      if (!(currUser && currUser.username === req.params.username)) {
+      if (!(currUser && currUser.username == username)) {
         throw new UnauthorizedError();
       }
     } else if (userId) {
