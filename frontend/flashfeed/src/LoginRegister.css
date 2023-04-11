@@ -1,0 +1,82 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.profile-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.card-form {
+  width: 350px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 30px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.card-body label {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.card-body input {
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid #e6ecf0;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.card-body button {
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1da1f2;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-group button:hover {
+  background-color: #0c90e8;
+}
+
+.login-register-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #1da1f2;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-register-link:hover {
+  color: #0c90e8;
+  cursor: pointer;
+}
