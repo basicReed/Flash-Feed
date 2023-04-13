@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ProfileImage from "./ProfileImage";
 import "./Post.css";
 import FlashFeedApi from "./Api";
-import CommentPopup from "./PostAndComments";
 import { timeSince } from "./helpers/timestamps";
 import { useNavigate } from "react-router-dom";
 import backupUserImg from "./backupUserImg.jpeg";
@@ -31,7 +30,6 @@ const Post = (props) => {
   const [likeCount, setLikeCount] = useState(numLikes);
   const [bookmarked, setBookmarked] = useState(isBookmarked);
   const [isLoading, setIsLoading] = useState(true);
-  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     setIsLoading(!profileImgUrl);

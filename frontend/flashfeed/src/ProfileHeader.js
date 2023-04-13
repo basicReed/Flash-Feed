@@ -1,5 +1,4 @@
 import React from "react";
-import ProfileImage from "./ProfileImage";
 import backupUserImg from "./backupUserImg.jpeg";
 import "./ProfileHeader.css";
 

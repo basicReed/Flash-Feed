@@ -29,6 +29,7 @@ const Profile = () => {
     }
   };
 
+  // On username change: set profile header values
   useEffect(() => {
     async function getUserData() {
       setIsLoading(true);

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from "./App";
 import { useParams } from "react-router-dom";
 import { timeSince } from "./helpers/timestamps";
 import Post from "./Post";
@@ -6,14 +7,15 @@ import ProfileImage from "./ProfileImage";
 import "./PostAndComments.css";
 import FlashFeedApi from "./Api";
 
-const PostAndComments = ({ user }) => {
+const PostAndComments = () => {
+  const { user } = useContext(AuthContext);
   const { postId } = useParams();
-
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [numComments, setNumComments] = useState(0);
 
+  // GET post and comments
   useEffect(() => {
     async function getComments() {
       const fetchPost = await FlashFeedApi.getPost(postId, user.userId);
@@ -25,11 +27,11 @@ const PostAndComments = ({ user }) => {
     }
     getComments();
   }, []);
-
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
+  // Create new comment for post
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newComment = await FlashFeedApi.addComment(

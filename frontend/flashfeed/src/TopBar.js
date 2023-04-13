@@ -23,7 +23,6 @@ function TopBar() {
           activeUsername,
           username
         );
-        console.log("check: ", checkIsFollowing.isFollowing);
         setIsFollowing(checkIsFollowing.isFollowing);
       }
     }
@@ -37,7 +36,6 @@ function TopBar() {
       activeUsername,
       username
     );
-    console.log("toggle: ", toggleFollow.follow);
     setIsFollowing(toggleFollow.follow);
   };
 
