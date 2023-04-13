@@ -6,8 +6,6 @@ import { timeSince } from "./helpers/timestamps";
 import { useNavigate } from "react-router-dom";
 import backupUserImg from "./backupUserImg.jpeg";
 
-import { updatePostLikes } from "./postSlice";
-
 const Post = (props) => {
   const {
     user,
