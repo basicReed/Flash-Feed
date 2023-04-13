@@ -2,13 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 
 import React, { useState, useEffect, createContext } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useParams,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import FlashFeedLayout from "./FlashFeedLayout";
@@ -17,10 +11,7 @@ import Bookmarks from "./Bookmarks";
 import Profile from "./Profile";
 import PostAndComments from "./PostAndComments";
 import LoadingIcon from "./LoadingIcon";
-
 import FlashFeedApi from "./Api";
-import NavBar from "./NavBar";
-import { Provider } from "react-redux";
 
 export const AuthContext = createContext();
 
@@ -32,6 +23,7 @@ function App() {
   /**
    * Checks if token is present & setsIsAthenticated
    */
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
@@ -44,12 +36,9 @@ function App() {
           let userData = await FlashFeedApi.getUser(username);
           console.log("USER DATA: ", userData);
           setUser(userData);
-          // setIsLoading(false);
-          // console.log(userData);
+          setIsLoading(false);
         } catch (error) {
           console.log(error);
-        } finally {
-          setIsLoading(false);
         }
       }
       fetchData();
@@ -80,6 +69,7 @@ function App() {
   //////////////////////////////////////////
   ///// Routes//////////////////////////////
   //////////////////////////////////////////
+
   return (
     <div className="App-background">
       <AuthContext.Provider
@@ -90,8 +80,6 @@ function App() {
         }}
       >
         <BrowserRouter>
-          {/* {isLoading ? <LoadingIcon /> : null} */}
-          {/* {isAuthenticated ? <NavBar /> : null} */}
           <Routes>
             <Route path="/" exact="true" element={<Navigate to="/login" />} />
             <Route
@@ -99,7 +87,7 @@ function App() {
               exact="true"
               element={
                 isAuthenticated && !isLoading ? (
-                  <Navigate to="/flashfeed" />
+                  <Navigate to="/home" />
                 ) : (
                   <Login storeUser={storeUser} />
                 )
@@ -110,70 +98,30 @@ function App() {
               exact="true"
               element={
                 isAuthenticated ? (
-                  <Navigate to="/flashfeed" />
+                  <Navigate to="/home" />
                 ) : (
                   <Register storeUser={storeUser} />
                 )
               }
             />
+
             {!isLoading && (
               <>
                 <Route
-                  path="/flashfeed"
+                  path="/*"
                   element={
                     isAuthenticated ? (
-                      <FlashFeedLayout title="Home">
+                      <FlashFeedLayout>
                         <Routes>
-                          <Route path="/" element={<FlashFeed user={user} />} />
+                          <Route path="/home" element={<FlashFeed />} />
+                          <Route path="/bookmarks" element={<Bookmarks />} />
                           <Route
-                            path="/bookmarks"
-                            element={<Bookmarks user={user} />}
+                            path="/profile/:username"
+                            element={<Profile />}
                           />
-                          <Route path="/" element={<Profile user={user} />} />
-                        </Routes>
-                      </FlashFeedLayout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-                <Route
-                  path="/bookmarks"
-                  element={
-                    isAuthenticated ? (
-                      <FlashFeedLayout title="Bookmarks">
-                        <Routes>
-                          <Route path="/" element={<Bookmarks user={user} />} />
-                        </Routes>
-                      </FlashFeedLayout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-                <Route
-                  path="/profile/:username"
-                  element={
-                    isAuthenticated ? (
-                      <FlashFeedLayout title={"Profile"}>
-                        <Routes>
-                          <Route path="/" element={<Profile user={user} />} />
-                        </Routes>
-                      </FlashFeedLayout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-                <Route
-                  path="/post/:postId"
-                  element={
-                    isAuthenticated ? (
-                      <FlashFeedLayout title="Post">
-                        <Routes>
                           <Route
-                            path="/"
-                            element={<PostAndComments user={user} />}
+                            path="/post/:postId"
+                            element={<PostAndComments />}
                           />
                         </Routes>
                       </FlashFeedLayout>

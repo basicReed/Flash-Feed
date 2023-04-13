@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./App";
 import Post from "./Post";
 import LoadingIcon from "./LoadingIcon";
 import FlashFeedApi from "./Api";
 
-const Bookmarks = ({ user, showCommentPopup, onToggleCommentPopup }) => {
+const Bookmarks = () => {
+  const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,13 +27,7 @@ const Bookmarks = ({ user, showCommentPopup, onToggleCommentPopup }) => {
         <>
           {posts.length > 0 ? (
             posts.map((post) => (
-              <Post
-                key={post.postId}
-                user={user}
-                {...post}
-                showCommentPopup={showCommentPopup} // pass the state as a prop
-                onToggleCommentPopup={onToggleCommentPopup}
-              />
+              <Post key={post.postId} user={user} {...post} />
             ))
           ) : (
             <p>No post bookmarked...</p>

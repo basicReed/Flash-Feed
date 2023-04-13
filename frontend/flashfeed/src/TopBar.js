@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import FlashFeedApi from "./Api";
 
-function TopBar({ title }) {
+function TopBar() {
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
-  const { username } = useParams();
+  const location = useLocation();
+  // Get username for page
+  const username = location.pathname.split("/")[2]; //Extract profile username (this component does not have access to params because its outside of the route being called)
   const activeUsername = localStorage.getItem("username");
+  // Get current page
+  const path = location.pathname;
+  const title = path.split("/")[1];
+  const upperTitle = title.charAt(0).toUpperCase() + title.slice(1);
 
-  // User Profile page check for follow button
+  // "Follow Button" status check
   useEffect(() => {
     async function getFollowData() {
-      if (title == "Profile" && username !== activeUsername) {
-        console.log(username);
-        console.log(activeUsername);
+      if (title == "profile" && username !== activeUsername) {
         const checkIsFollowing = await FlashFeedApi.isFollowing(
           activeUsername,
           username
@@ -24,12 +28,9 @@ function TopBar({ title }) {
       }
     }
     getFollowData();
-  }, [title, username]);
+  }, [upperTitle, username]);
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
+  // Follow Button toggle
   const handleFollowClick = async () => {
     setIsFollowing(!isFollowing);
     const toggleFollow = await FlashFeedApi.toggleFollow(
@@ -40,17 +41,25 @@ function TopBar({ title }) {
     setIsFollowing(toggleFollow.follow);
   };
 
+  // Back button
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="top-bar">
-      {title !== "Home" && (
+      {/* If !home show back button */}
+      {title !== "home" && (
         <button className="back-button" onClick={handleBackClick}>
           <i className="fas fa-arrow-left"></i>
         </button>
       )}
+      {/* if !profile show title : display username */}
       <h1 className="page-title">
-        {title == "Profile" ? `@${username}` : title}
+        {title == "profile" ? `@${username}` : upperTitle}
       </h1>
-      {title == "Profile" && username !== activeUsername && (
+      {/* if profile and !curUser display follow button */}
+      {title == "profile" && username !== activeUsername && (
         <button className="follow-button" onClick={handleFollowClick}>
           {isFollowing ? "Unfollow" : "Follow"}
         </button>

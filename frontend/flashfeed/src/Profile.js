@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./App";
 import { useParams } from "react-router-dom";
 import ProfileContent from "./ProfileContent";
 import ProfileHeader from "./ProfileHeader";
 import ProfileNavigation from "./ProfileNavigation";
 import FlashFeedApi from "./Api";
 
-const Profile = ({ user }) => {
+const Profile = () => {
+  const { user } = useContext(AuthContext);
   const { username } = useParams();
   const activeUsername = localStorage.getItem("username");
   const [activeTab, setActiveTab] = useState("posts");
@@ -13,7 +15,7 @@ const Profile = ({ user }) => {
   const [postCount, setPostCount] = useState("-");
   const [followerCount, setFollowerCount] = useState("-");
   const [followingCount, setFollowingCount] = useState("-");
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const onTabChange = (tabName) => {
     setActiveTab(tabName);

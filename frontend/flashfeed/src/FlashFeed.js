@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./App";
 import NavBar from "./NavBar";
 import PostForm from "./PostForm";
 import PostList from "./PostList";
@@ -12,13 +13,15 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import FlashFeedApi from "./Api";
 
-function FlashFeed({ user }) {
+function FlashFeed() {
+  const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [showCommentPopup, setShowCommentPopup] = useState(false);
   const [curPost, setCurPost] = useState({});
   const [page, setPage] = useState(1); //  variable for page number
   const [hasMore, setHasMore] = useState(true); // variable to tell user if there is more
 
+  console.log("FLashFeedUser: ", user);
   const refresh = (setPosts) => {};
 
   async function getPosts() {

@@ -38,7 +38,7 @@ const NavBar = () => {
               <h1>LOGO HERE</h1>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/flashfeed" exact>
+              <NavLink className="nav-link" to="/home" exact>
                 <FontAwesomeIcon icon={faHome} />
                 <span className="ms-2">Home</span>
               </NavLink>

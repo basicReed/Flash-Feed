@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import TopBar from "./TopBar";
 import SearchPanel from "./SearchPanel";
-import { useParams } from "react-router-dom";
 
 import "./FlashFeedLayout.css";
 
 function FlashFeedLayout({ title, children }) {
   const navigate = useNavigate();
-  const { username } = useParams();
+
   const activeUsername = localStorage.getItem("username");
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -27,7 +26,7 @@ function FlashFeedLayout({ title, children }) {
         <NavBar />
       </div>
       <div className="col2">
-        <TopBar title={title} />
+        <TopBar />
         {children}
       </div>
       <div className="col3">
