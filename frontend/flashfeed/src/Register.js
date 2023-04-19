@@ -16,7 +16,7 @@ function Register({ storeUser }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/jobly");
+      navigate("/home");
     }
   }, []);
 

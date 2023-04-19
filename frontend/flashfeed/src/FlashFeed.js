@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "./App";
+import { useAuth } from "./App";
 import PostForm from "./PostForm";
 import Post from "./Post";
 import LoadingIcon from "./LoadingIcon";
@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import FlashFeedApi from "./Api";
 
 function FlashFeed() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1); //  variable for page number for post fetched
   const [hasMore, setHasMore] = useState(true); // variable to tell user if there is more posts available

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "./App";
+import { useAuth } from "./App";
 import Post from "./Post";
 import LoadingIcon from "./LoadingIcon";
 import FlashFeedApi from "./Api";
 
 const Bookmarks = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { AuthContext } from "./App";
+import { useAuth } from "./App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -11,13 +11,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
 const NavBar = () => {
-  const { removeUser } = useContext(AuthContext);
+  const { removeUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     removeUser();
-    navigate("/");
+    navigate("/login");
   };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">

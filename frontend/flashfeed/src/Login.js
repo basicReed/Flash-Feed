@@ -9,11 +9,19 @@ function Login({ storeUser }) {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let token = await FlashFeedApi.login(username, password);
       storeUser(token, username);
+      navigate("/home");
     } catch (err) {
       console.log(err);
     }

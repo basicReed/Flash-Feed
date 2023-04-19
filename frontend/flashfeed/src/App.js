@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
@@ -13,10 +13,15 @@ import FlashFeedApi from "./Api";
 
 export const AuthContext = createContext();
 
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
 function App() {
+  const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   /**
    * Checks if token is present & setsIsAthenticated
@@ -26,24 +31,20 @@ function App() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
-    if (token) {
-      setIsAuthenticated(true);
-      // get and set user data for each page if authenticated
       async function fetchData() {
-        try {
-          let userData = await FlashFeedApi.getUser(username);
-          console.log("USER DATA: ", userData);
-          setUser(userData);
-          setIsLoading(false);
-        } catch (error) {
-          console.log(error);
+        if (token) {
+          try {
+            let userData = await FlashFeedApi.getUser(username);
+            setUser(userData);
+          } catch (error) {
+            console.log(error);
+          }
         }
+        setIsLoading(false);
       }
+      setIsLoading(true);
       fetchData();
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
+  }, [token]);
 
   /**
    *  Stores user data in local storage and sets authentication
@@ -60,13 +61,15 @@ function App() {
    */
   async function removeUser() {
     localStorage.clear();
-    setUser({});
+    setUser(null);
     setIsAuthenticated(false);
+    setIsLoading(true);
   }
 
   //////////////////////////////////////////
   ///// Routes//////////////////////////////
   //////////////////////////////////////////
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="App-background">
@@ -79,57 +82,34 @@ function App() {
       >
         <BrowserRouter>
           <Routes>
-            <Route path="/" exact="true" element={<Navigate to="/login" />} />
+            <Route path="/" exact="true" element={<Navigate to="/home" />} />
             <Route
               path="/login"
-              exact="true"
-              element={
-                isAuthenticated && !isLoading ? (
-                  <Navigate to="/home" />
-                ) : (
-                  <Login storeUser={storeUser} />
-                )
-              }
-            />
+              element={<Login storeUser={storeUser} />} />
             <Route
               path="/register"
               exact="true"
+              element={<Register storeUser={storeUser} />} />
+            <Route
+              path="/*"
+              exact="true"
               element={
-                isAuthenticated ? (
-                  <Navigate to="/home" />
-                ) : (
-                  <Register storeUser={storeUser} />
-                )
-              }
-            />
-
-            {!isLoading && (
-              <>
-                <Route
-                  path="/*"
-                  element={
-                    isAuthenticated ? (
-                      <FlashFeedLayout>
-                        <Routes>
-                          <Route path="/home" element={<FlashFeed />} />
-                          <Route path="/bookmarks" element={<Bookmarks />} />
-                          <Route
-                            path="/profile/:username"
-                            element={<Profile />}
-                          />
-                          <Route
-                            path="/post/:postId"
-                            element={<PostAndComments />}
-                          />
-                        </Routes>
-                      </FlashFeedLayout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-              </>
-            )}
+                  <FlashFeedLayout>
+                    <Routes>
+                      <Route path="/home" element={<FlashFeed />} />
+                      <Route path="/bookmarks" element={<Bookmarks />} />
+                      <Route
+                        path="/profile/:username"
+                        element={<Profile />}
+                      />
+                      <Route 
+                        path="/post/:postId"
+                        element={<PostAndComments />}
+                      />
+                    </Routes>
+                  </FlashFeedLayout>
+                }
+              />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
@@ -138,3 +118,12 @@ function App() {
 }
 
 export default App;
+
+/** TODO: Move this spinner to its own component */
+function LoadingSpinner() {
+  return (
+      <div className="LoadingSpinner">
+        Loading ...
+      </div>
+  );
+}
