@@ -14,9 +14,10 @@ import FlashFeedApi from "./Api";
 export const AuthContext = createContext();
 
 function App() {
+  const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   /**
    * Checks if token is present & setsIsAthenticated
@@ -26,24 +27,20 @@ function App() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
-    if (token) {
-      setIsAuthenticated(true);
-      // get and set user data for each page if authenticated
-      async function fetchData() {
+    async function fetchData() {
+      if (token) {
         try {
           let userData = await FlashFeedApi.getUser(username);
-          console.log("USER DATA: ", userData);
           setUser(userData);
-          setIsLoading(false);
         } catch (error) {
           console.log(error);
         }
       }
-      fetchData();
-    } else {
-      setIsAuthenticated(false);
+      setIsLoading(false);
     }
-  }, []);
+    setIsLoading(true);
+    fetchData();
+  }, [token]);
 
   /**
    *  Stores user data in local storage and sets authentication
@@ -60,13 +57,15 @@ function App() {
    */
   async function removeUser() {
     localStorage.clear();
-    setUser({});
+    setUser(null);
     setIsAuthenticated(false);
+    setIsLoading(true);
   }
 
   //////////////////////////////////////////
   ///// Routes//////////////////////////////
   //////////////////////////////////////////
+  if (isLoading) return <LoadingIcon />;
 
   return (
     <div className="App-background">
@@ -84,7 +83,7 @@ function App() {
               path="/login"
               exact="true"
               element={
-                isAuthenticated && !isLoading ? (
+                isAuthenticated ? (
                   <Navigate to="/home" />
                 ) : (
                   <Login storeUser={storeUser} />
@@ -102,41 +101,38 @@ function App() {
                 )
               }
             />
-
-            {!isLoading && (
-              <>
-                <Route
-                  path="/*"
-                  element={
-                    isAuthenticated ? (
-                      <FlashFeedLayout>
-                        <Routes>
-                          <Route
-                            path="/home"
-                            element={<FlashFeed key={"Home"} />}
-                          />
-                          <Route
-                            path="/home/my-feed"
-                            element={<FlashFeed key={"Feed"} />}
-                          />
-                          <Route path="/bookmarks" element={<Bookmarks />} />
-                          <Route
-                            path="/profile/:username"
-                            element={<Profile />}
-                          />
-                          <Route
-                            path="/post/:postId"
-                            element={<PostAndComments />}
-                          />
-                        </Routes>
-                      </FlashFeedLayout>
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-              </>
-            )}
+            <>
+              <Route
+                path="/*"
+                element={
+                  isAuthenticated ? (
+                    <FlashFeedLayout>
+                      <Routes>
+                        <Route
+                          path="/home"
+                          element={<FlashFeed key={"Home"} />}
+                        />
+                        <Route
+                          path="/home/my-feed"
+                          element={<FlashFeed key={"Feed"} />}
+                        />
+                        <Route path="/bookmarks" element={<Bookmarks />} />
+                        <Route
+                          path="/profile/:username"
+                          element={<Profile />}
+                        />
+                        <Route
+                          path="/post/:postId"
+                          element={<PostAndComments />}
+                        />
+                      </Routes>
+                    </FlashFeedLayout>
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+            </>
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
