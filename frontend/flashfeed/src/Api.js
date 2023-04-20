@@ -188,6 +188,43 @@ class FlashFeedApi {
     return response.data.posts;
   }
 
+  static async getMyFeed(userId, pageNum) {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+    const response = await axios.get(
+      `${BASE_API_URL}/posts/my-feed?user=${userId}&page=${pageNum}`,
+      {
+        headers,
+      }
+    );
+
+    return response.data.posts;
+  }
+
+  static async deletePost(postId, userId) {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+    const response = await axios.delete(
+      `${BASE_API_URL}/posts/${postId}?userId=${userId}`,
+      {
+        headers,
+      }
+    );
+
+    return response.data.deleted;
+  }
+
+  static async togglePostPrivacy(postId, userId) {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+    const data = { postId, userId };
+    const response = await axios.post(`${BASE_API_URL}/posts/private`, data, {
+      headers,
+    });
+
+    return response.data.isPrivate;
+  }
+
   static async likeOrUnlike(postId, userId) {
     console.log("POST ID CHECK 2: ", postId);
     const token = localStorage.getItem("token");

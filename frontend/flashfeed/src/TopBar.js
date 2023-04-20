@@ -27,7 +27,7 @@ function TopBar() {
       }
     }
     getFollowData();
-  }, [upperTitle, username]);
+  }, [path, username]);
 
   // Follow Button toggle
   const handleFollowClick = async () => {
@@ -44,10 +44,18 @@ function TopBar() {
     navigate(-1);
   };
 
+  const handleGlobalClick = () => {
+    navigate("/home");
+  };
+
+  const handleMyFeedClick = () => {
+    navigate("/home/my-feed");
+  };
+
   return (
     <div className="top-bar">
       {/* If !home show back button */}
-      {title !== "home" && (
+      {title !== "home" && title !== "my-feed" && (
         <button className="back-button" onClick={handleBackClick}>
           <i className="fas fa-arrow-left"></i>
         </button>
@@ -56,6 +64,28 @@ function TopBar() {
       <h1 className="page-title">
         {title == "profile" ? `@${username}` : upperTitle}
       </h1>
+
+      {title == "home" && (
+        <div className="top-bar-buttons">
+          <button
+            className={`top-bar-button toggle-left ${
+              path === "/home" ? "active" : ""
+            }`}
+            onClick={handleGlobalClick}
+          >
+            Global
+          </button>
+          <button
+            className={`top-bar-button toggle-right ${
+              path === "/home/my-feed" ? "active" : ""
+            }`}
+            onClick={handleMyFeedClick}
+          >
+            My Feed
+          </button>
+        </div>
+      )}
+
       {/* if profile and !curUser display follow button */}
       {title == "profile" && username !== activeUsername && (
         <button className="follow-button" onClick={handleFollowClick}>

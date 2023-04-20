@@ -4,17 +4,23 @@ import PostForm from "./PostForm";
 import Post from "./Post";
 import LoadingIcon from "./LoadingIcon";
 import InfiniteScroll from "react-infinite-scroll-component";
-
 import FlashFeedApi from "./Api";
+import { useLocation } from "react-router-dom";
 
 function FlashFeed() {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1); //  variable for page number for post fetched
   const [hasMore, setHasMore] = useState(true); // variable to tell user if there is more posts available
+  const location = useLocation();
 
   async function getPosts() {
-    const fetchedPosts = await FlashFeedApi.getAllPost(user.userId, page);
+    // Use different API methods based on the URL path
+    const apiMethod =
+      location.pathname === "/home/my-feed"
+        ? FlashFeedApi.getMyFeed
+        : FlashFeedApi.getAllPost;
+    const fetchedPosts = await apiMethod(user.userId, page);
     //Load more || stop
     fetchedPosts.length > 0
       ? setPosts((posts) => [...posts, ...fetchedPosts])
@@ -29,7 +35,8 @@ function FlashFeed() {
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [location]);
+
   return (
     <InfiniteScroll
       dataLength={posts.length} //render the next data

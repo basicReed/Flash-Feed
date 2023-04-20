@@ -63,6 +63,8 @@
 }
 
 .user-card .follow-button:hover {
+  text-decoration: none;
+  color: white;
   background-color: #0c8bff;
 }
 

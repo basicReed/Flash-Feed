@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "./App";
 import ProfileImage from "./ProfileImage";
+import PostOptions from "./PostOptions";
 import "./Post.css";
 import FlashFeedApi from "./Api";
-import { timeSince } from "./helpers/timestamps";
+import ReactTimeAgo from "react-time-ago";
 import { useNavigate } from "react-router-dom";
 import backupUserImg from "./backupUserImg.jpeg";
 
 const Post = (props) => {
   const {
-    user,
     postId,
     isLiked,
     isPrivate,
@@ -23,11 +24,12 @@ const Post = (props) => {
   } = props;
 
   const navigate = useNavigate();
-
+  const { user } = useContext(AuthContext);
   const [liked, setLiked] = useState(isLiked);
   const [likeCount, setLikeCount] = useState(numLikes);
   const [bookmarked, setBookmarked] = useState(isBookmarked);
   const [isLoading, setIsLoading] = useState(true);
+  const [showPost, setShowPost] = useState(true);
 
   useEffect(() => {
     setIsLoading(!profileImgUrl);
@@ -61,6 +63,7 @@ const Post = (props) => {
       // Update the state immediately
       setBookmarked(!bookmarked);
       // Make API call
+
       await FlashFeedApi.bookmarkOrRemove(user.userId, postId);
     } catch (err) {
       console.log("Error bookmarking post:", err);
@@ -75,17 +78,41 @@ const Post = (props) => {
     navigate(`/post/${postId}`);
   };
 
+  const handleDeleteClick = async () => {
+    try {
+      await FlashFeedApi.deletePost(postId, user.userId);
+      setShowPost(false);
+    } catch (err) {
+      console.log("Error deleting post:", err);
+    }
+  };
+
+  if (!showPost) {
+    return null;
+  }
+
   return (
     <div className="post">
-      <div className="post-header" onClick={handleUserButtonClick}>
-        {isLoading ? (
-          <ProfileImage key="backup" imageUrl={backupUserImg} />
-        ) : (
-          <ProfileImage key={profileImgUrl} imageUrl={profileImgUrl} />
-        )}
-        <div className="post-info">
-          <h2>{username}</h2>
-          <p>{timeSince(timestamp)}</p>
+      <div className="post-header">
+        <div className="post-user" onClick={handleUserButtonClick}>
+          {isLoading ? (
+            <ProfileImage key="backup" imageUrl={backupUserImg} />
+          ) : (
+            <ProfileImage key={profileImgUrl} imageUrl={profileImgUrl} />
+          )}
+          <div className="post-info">
+            <h2>{username}</h2>
+            <p>{<ReactTimeAgo date={timestamp} locale="en-US" />}</p>
+          </div>
+        </div>
+        <div className="post-options">
+          <PostOptions
+            user={user}
+            postId={postId}
+            isPrivate={isPrivate}
+            username={username}
+            onDelete={handleDeleteClick}
+          />
         </div>
       </div>
       <div className="post-body">

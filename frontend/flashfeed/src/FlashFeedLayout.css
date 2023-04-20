@@ -29,6 +29,7 @@
   border-bottom: 1px solid #ccc;
   height: 55px;
   padding: 0 16px;
+  z-index: 10;
 }
 
 .page-title {
@@ -74,4 +75,56 @@
 .follow-button:hover {
   background-color: var(--primary);
   color: #1da1f2;
+}
+
+/* Global button */
+
+.top-bar-buttons {
+  margin-left: auto;
+  border: solid 1px #65778668;
+  border-radius: 20px;
+}
+
+.top-bar-button {
+  display: inline-block;
+
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: none;
+  color: #657786;
+  transition: all 0.2s ease-in-out;
+}
+
+.top-bar-button.toggle-right {
+  padding: 6px 16px 6px 8px;
+  border-left: solid 0.5px #65778668;
+  border-radius: 0px 20px 20px 0px;
+}
+
+.top-bar-button.toggle-left {
+  padding: 6px 8px 6px 16px;
+  border-right: solid 0.5px #65778668;
+  border-radius: 20px 0px 0px 20px;
+}
+
+.top-bar-button.active {
+  border: solid 0px #65778668;
+  color: #1da1f2;
+  box-shadow: inset rgba(87, 161, 234, 0.427) 0px 0px 6px;
+}
+
+/* Style for indented active button */
+.top-bar .global-button.active,
+.top-bar .my-feed-button.active {
+  margin-right: auto;
+  margin-left: 10px;
+  border-radius: 20px;
+  padding: 5px 10px;
 }

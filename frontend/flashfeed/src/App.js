@@ -111,7 +111,14 @@ function App() {
                     isAuthenticated ? (
                       <FlashFeedLayout>
                         <Routes>
-                          <Route path="/home" element={<FlashFeed />} />
+                          <Route
+                            path="/home"
+                            element={<FlashFeed key={"Home"} />}
+                          />
+                          <Route
+                            path="/home/my-feed"
+                            element={<FlashFeed key={"Feed"} />}
+                          />
                           <Route path="/bookmarks" element={<Bookmarks />} />
                           <Route
                             path="/profile/:username"

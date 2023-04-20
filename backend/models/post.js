@@ -76,6 +76,36 @@ class Post {
     return results.rows;
   }
 
+  static async getAllFromFollowed(userId, pageNum) {
+    const pageSize = 10;
+    const offset = (pageNum - 1) * pageSize;
+
+    const results = await db.query(
+      ` SELECT post.post_id AS "postId",
+          post.user_id AS "userId",
+          post.txt_content AS "text",
+            post.img_url AS "imgUrl",
+          post.is_private AS "isPrivate",
+          users.username,
+          users.image_url AS "profileImgUrl",
+          post.date_posted AS "timestamp",
+          (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+          (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+          (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments",
+          (SELECT EXISTS(SELECT * FROM bookmarks WHERE bookmarks.user_id = $1 AND bookmarks.post_id = post.post_id)) AS "isBookmarked"
+      FROM post
+      JOIN users ON post.user_id = users.user_id
+      JOIN follow ON follow.followed_id = post.user_id
+      WHERE (is_private = $2 OR post.user_id = $1)
+      AND follow.follower_id = $1
+      ORDER BY date_posted DESC
+      LIMIT $3 OFFSET $4`,
+      [userId, false, pageSize, offset]
+    );
+    console.log("lenghth: ", results.rows.length);
+    return results.rows;
+  }
+
   /** Find all posts by user.
    *
    * Returns [{ postId, userId, txtContent, imgUrl, isPrivate, numLikes, numComments, dataPosted }]
@@ -235,6 +265,7 @@ ORDER BY post.date_posted;
    *  Throws NotFoundError if not post found with postId
    * */
   static async delete(postId) {
+    console.log("FINAL ID: ", postId);
     const result = await db.query(
       `DELETE FROM post
             WHERE post_id = $1
@@ -284,6 +315,26 @@ ORDER BY post.date_posted;
 
       return true;
     }
+  }
+
+  static async togglePrivacy(postId, userId) {
+    // Check if post exists
+    await Post.doesExist(postId);
+    // Check if user exists
+    await User.getById(userId);
+
+    const results = await db.query(
+      `
+            UPDATE post
+            SET is_private = NOT is_private
+            WHERE post_id = $1 AND user_id = $2
+            RETURNING is_private AS "isPrivate";
+            `,
+      [postId, userId]
+    );
+    const isPrivate = results.rows[0];
+
+    return isPrivate;
   }
 
   /** Get all posts bookmarked by user

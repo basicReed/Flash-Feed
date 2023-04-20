@@ -13,6 +13,9 @@
   display: flex;
   align-items: center;
 }
+.post-user {
+  display: flex;
+}
 
 .post-header :hover {
   cursor: pointer;

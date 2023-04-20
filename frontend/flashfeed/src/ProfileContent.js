@@ -48,10 +48,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
       content = (
         <div>
           {isLoading && <LoadingIcon />}
-          {posts &&
-            posts.map((post) => (
-              <Post key={post.postId} user={user} {...post} />
-            ))}
+          {posts && posts.map((post) => <Post key={post.postId} {...post} />)}
         </div>
       );
       break;

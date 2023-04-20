@@ -1,0 +1,50 @@
+.post-options {
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.post-options button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.post-options button:hover {
+  color: #1da1f2;
+}
+
+.options-menu {
+  position: absolute;
+  right: 0;
+  width: 120px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.064);
+  /* padding: 5px; */
+  z-index: 1;
+}
+
+.options-menu button {
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #999;
+  padding: 5px 10px;
+  text-align: right;
+}
+
+.options-menu button:hover {
+  color: #1da1f2;
+  background-color: #f5f5f5;
+}
+
+.post-options .fa-lock {
+  color: #999;
+}

@@ -27,6 +27,24 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
+//GET /posts/my-feed
+// Returns list of all posts from users that are followed by current user
+router.get(
+  "/my-feed",
+  // ensureLoggedIn,
+  // ensureCorrectUser,
+  async function (req, res, next) {
+    console.log("MADE IT HERE");
+    try {
+      const { user: userId, page: pageNum } = req.query;
+      const posts = await Post.getAllFromFollowed(userId, pageNum);
+      return res.json({ posts });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 // GET /posts/:id
 // Returns details of a single post by ID
 router.get("/:postId", ensureLoggedIn, async function (req, res, next) {
@@ -129,7 +147,8 @@ router.delete(
   ensureLoggedIn,
   async function (req, res, next) {
     try {
-      const postId = parseInt(req.params.postId);
+      const { postId } = req.params;
+      console.log("POST ID: ", postId);
 
       await Post.delete(postId);
       return res.json({ deleted: postId });
@@ -165,6 +184,23 @@ router.post(
       const like = await Post.likeOrUnlike(postId, userId);
 
       return res.json({ like });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.post(
+  "/private",
+  ensureCorrectUser,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const { postId, userId } = req.body;
+
+      const isPrivate = await Post.togglePrivacy(postId, userId);
+
+      return res.json({ isPrivate });
     } catch (err) {
       return next(err);
     }

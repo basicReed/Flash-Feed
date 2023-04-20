@@ -4,6 +4,7 @@
   display: flex;
   background-color: white;
   border-bottom: 1px solid #e1e8ed;
+  z-index: 10;
 }
 
 .profile-nav ul {

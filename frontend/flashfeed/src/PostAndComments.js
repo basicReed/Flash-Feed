@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "./App";
 import { useParams } from "react-router-dom";
-import { timeSince } from "./helpers/timestamps";
+
+import ReactTimeAgo from "react-time-ago";
 import Post from "./Post";
 import ProfileImage from "./ProfileImage";
 import "./PostAndComments.css";
@@ -18,6 +19,9 @@ const PostAndComments = () => {
   // GET post and comments
   useEffect(() => {
     async function getComments() {
+      console.log("Post Id: ", postId);
+      console.log("user.userId: ", user.userId);
+
       const fetchPost = await FlashFeedApi.getPost(postId, user.userId);
       setPost(fetchPost);
 
@@ -62,14 +66,14 @@ const PostAndComments = () => {
             <p>{numComments} Comments</p>
           </div>
           <div className="comments-list">
-            {comments.map((comment) => (
-              <div className="comment" key={comment.commentId}>
-                <ProfileImage imageUrl={comment.profileImgUrl} />
+            {comments.map((c) => (
+              <div className="comment" key={c.commentId}>
+                <ProfileImage imageUrl={c.profileImgUrl} />
                 <div className="content">
-                  <p className="name">{comment.username}</p>
-                  <p>{comment.txtContent}</p>
+                  <p className="name">{c.username}</p>
+                  <p>{c.txtContent}</p>
                   <p className="timestamp">
-                    {timeSince(comment.dateCommented)}
+                    <ReactTimeAgo date={c.dateCommented} locale="en-US" />
                   </p>
                 </div>
               </div>

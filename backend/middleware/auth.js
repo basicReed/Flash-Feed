@@ -49,30 +49,15 @@ function ensureLoggedIn(req, res, next) {
  *  If not, raises Unauthorized.
  */
 
-// function ensureCorrectUser(req, res, next) {
-//   try {
-//     const user = res.locals.user;
-//     console.log("USER: ", user);
-//     if (!(user && user.username === req.params.username)) {
-//       throw new UnauthorizedError();
-//     }
-//     return next();
-//   } catch (err) {
-//     return next(err);
-//   }
-// }
-
 async function ensureCorrectUser(req, res, next) {
   try {
-    const userId = parseInt(req.params.userId) || parseInt(req.body.userId);
+    const userId =
+      parseInt(req.params.userId) ||
+      parseInt(req.body.userId) ||
+      parseInt(req.query.userId);
     const postId = parseInt(req.params.postId) || parseInt(req.body.postId);
     const username = req.params.username || req.body.username;
     const currUser = res.locals.user;
-
-    console.log("userID: ", userId);
-    console.log("postID: ", postId);
-    console.log("username: ", username);
-    console.log("currentUser: ", currUser.username);
 
     if (username) {
       if (!(currUser && currUser.username == username)) {
