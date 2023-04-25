@@ -118,3 +118,19 @@
 .footer button:hover {
   background-color: #217ac0;
 }
+
+@media (max-width: 580px) {
+  .comment-header {
+    padding: 0 10px;
+  }
+  .comment-section {
+    padding: 0;
+  }
+}
+
+@media (max-width: 580px) {
+  .footer button {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+}

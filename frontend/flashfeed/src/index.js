@@ -11,6 +11,8 @@ import ru from "javascript-time-ago/locale/ru.json";
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
 
+console.log("RU: ", ru);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

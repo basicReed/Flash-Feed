@@ -1,36 +1,37 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "./App";
 import { useParams } from "react-router-dom";
-
 import ReactTimeAgo from "react-time-ago";
 import Post from "./Post";
 import ProfileImage from "./ProfileImage";
 import "./PostAndComments.css";
 import FlashFeedApi from "./Api";
+import LoadingIcon from "./LoadingIcon";
 
 const PostAndComments = () => {
   const { user } = useContext(AuthContext);
   const { postId } = useParams();
-  const [post, setPost] = useState({});
-  const [comments, setComments] = useState([]);
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState(null);
   const [comment, setComment] = useState("");
   const [numComments, setNumComments] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // GET post and comments
   useEffect(() => {
     async function getComments() {
-      console.log("Post Id: ", postId);
-      console.log("user.userId: ", user.userId);
-
       const fetchPost = await FlashFeedApi.getPost(postId, user.userId);
       setPost(fetchPost);
 
       const fetchedComments = await FlashFeedApi.getComments(postId);
       setComments(fetchedComments);
       setNumComments(fetchPost.numComments);
+
+      setIsLoading(false);
     }
     getComments();
   }, []);
+
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
@@ -49,6 +50,8 @@ const PostAndComments = () => {
     setNumComments(parseInt(numComments) + 1);
   };
 
+  if (isLoading) return <LoadingIcon />;
+
   return (
     <div className="popup-background">
       <div className="comment-popup">
@@ -60,6 +63,7 @@ const PostAndComments = () => {
           {...post}
           numComments={numComments}
         />
+
         <div className="comment-section">
           <div className="comment-header">
             <p>{"@" + post.username}</p>

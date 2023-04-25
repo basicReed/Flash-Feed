@@ -247,6 +247,7 @@ class FlashFeedApi {
       }
     );
 
+    console.log("COMMENTS: ", response.data.comments);
     return response.data.comments;
   }
 

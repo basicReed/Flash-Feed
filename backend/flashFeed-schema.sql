@@ -13,10 +13,10 @@ CREATE TABLE users (
 CREATE TABLE post (
     post_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id) NOT NULL,
-    txt_content TEXT VARCHAR(1000) NOT NULL ,
+    txt_content TEXT NOT NULL CHECK (length(txt_content) <= 1000),
     img_url VARCHAR(1000),
     is_private BOOLEAN DEFAULT false,
-    date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_posted TIMESTAMP DEFAULT clock_timestamp()
 );
 
 
@@ -26,7 +26,7 @@ CREATE TABLE comment (
     user_id INTEGER REFERENCES users(user_id) NOT NULL,
     txt_content TEXT NOT NULL,
     post_id INTEGER REFERENCES post(post_id) ON DELETE CASCADE,
-    date_commented TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_commented TIMESTAMP  DEFAULT clock_timestamp()
 );
 
 
@@ -48,6 +48,6 @@ PRIMARY KEY (followed_id, follower_id)
 CREATE TABLE bookmarks (
     user_id INTEGER REFERENCES users(user_id) NOT NULL,
     post_id INTEGER REFERENCES post(post_id) ON DELETE CASCADE,
-    date_bookmarked TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_bookmarked TIMESTAMP  DEFAULT clock_timestamp(),
     PRIMARY KEY (user_id, post_id)
 );
