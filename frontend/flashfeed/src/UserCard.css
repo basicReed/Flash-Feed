@@ -26,10 +26,9 @@
 }
 
 .user-card .user-info {
-  /* display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-grow: 1; */
   overflow: hidden;
 }
 
@@ -68,9 +67,29 @@
   background-color: #0c8bff;
 }
 
+@media screen and (max-width: 800px) {
+  .user-card {
+    width: 80%;
+  }
+}
+
 @media screen and (min-width: 600px) {
   .user-card {
     flex-direction: row;
     justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .user-card {
+    width: 90%;
+  }
+
+  .user-card .username h2 {
+    font-size: 15px;
+  }
+
+  .user-card .user-info p {
+    font-size: 10px;
   }
 }

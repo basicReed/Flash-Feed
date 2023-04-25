@@ -10,6 +10,16 @@
   list-style: none;
 }
 
+/* Set vertical spacing between li elements */
+.navbar-nav li {
+  margin-bottom: 30px;
+}
+
+/* Add spacing between icon and text */
+.navbar-nav .nav-link svg {
+  margin-right: 12px;
+}
+
 /* Set color for links in navbar */
 .nav-link {
   text-decoration: none;
@@ -31,6 +41,11 @@
   background-color: transparent;
 }
 
+/* nav-search only available at 1100px screen */
+.nav-search {
+  display: none;
+}
+
 /* Style the toggler icon */
 .navbar-toggler {
   border-color: #d9d9d9;
@@ -40,27 +55,69 @@
   background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0,0,0,.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* Media query for hamburger menu */
-@media (max-width: 991.98px) {
-  .navbar-collapse {
-    padding: 10px;
+/* Media query for screens up to 1400px */
+@media (max-width: 1400px) {
+  .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0;
+    margin-left: 40px;
+  }
+  /* Hide the h1 element */
+  .navbar-nav > li:first-child {
+    display: none;
   }
 
+  .ms-2 {
+    display: none;
+  }
+
+  /* Add spacing between icon and text */
+  .navbar-nav .nav-link svg {
+    margin-right: 0px;
+  }
+}
+
+/* Media query for hamburger menu */
+@media (max-width: 1100px) {
   .navbar-nav {
-    flex-direction: column;
+    margin-left: 0px;
+  }
+
+  .nav-search {
+    display: block;
+  }
+
+  .search-active {
+    color: #1da1f2;
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar-nav {
+    margin: 0;
+    width: 100vw;
+    flex-direction: row;
+    background-color: white;
+  }
+
+  .navbar-nav li {
+    flex: 1;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .nav-item {
-    margin-bottom: 10px;
+    padding: 20px 0;
   }
-}
 
-/* Set vertical spacing between li elements */
-.navbar-nav li {
-  margin-bottom: 30px;
-}
+  li:has(> .nav-link.active) {
+    color: #1da1f2;
 
-/* Add spacing between icon and text */
-.navbar-nav .nav-link svg {
-  margin-right: 12px;
+    border-top: 2px solid #1da1f2;
+  }
 }

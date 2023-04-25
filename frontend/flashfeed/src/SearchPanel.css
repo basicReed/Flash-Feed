@@ -60,3 +60,26 @@
 .post-search-section button:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 1400px) {
+  .search-panel-container {
+    width: 22%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .search-panel-container {
+    top: 0px;
+    width: 70%;
+    height: 100%;
+    padding: 5% 15% 5% 18%;
+  }
+}
+
+@media (max-width: 500px) {
+  .search-panel-container {
+    top: 0px;
+    width: 80%;
+    padding: 10% 10%;
+  }
+}

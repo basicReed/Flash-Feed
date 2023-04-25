@@ -6,11 +6,12 @@ import {
   faBookmark,
   faUser,
   faSignOutAlt,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
-const NavBar = () => {
+const NavBar = ({ onSearchToggle }) => {
   const { removeUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -18,24 +19,14 @@ const NavBar = () => {
     removeUser();
     navigate("/");
   };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar ">
       <div className="container-fluid">
-        {/* <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button> */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li>
-              <h1>LOGO HERE</h1>
+              <h1>Flash Feed</h1>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/home" exact>
@@ -47,6 +38,12 @@ const NavBar = () => {
               <NavLink className="nav-link" to="/bookmarks" exact>
                 <FontAwesomeIcon icon={faBookmark} />
                 <span className="ms-2">Bookmarks</span>
+              </NavLink>
+            </li>
+
+            <li className={`nav-item nav-search `}>
+              <NavLink className="nav-link" to="/search" exact>
+                <FontAwesomeIcon icon={faSearch} />
               </NavLink>
             </li>
 

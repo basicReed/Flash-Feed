@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import TopBar from "./TopBar";
 import SearchPanel from "./SearchPanel";
+import { useLocation } from "react-router-dom";
 
 import "./FlashFeedLayout.css";
 
-function FlashFeedLayout({ title, children }) {
+function FlashFeedLayout({ children }) {
+  const [searchActive, setSearchActive] = useState(false);
+  let location = useLocation();
+
+  // display search on smaller devices
+  useEffect(() => {
+    if (location.pathname === "/search") {
+      setSearchActive(true);
+    } else {
+      setSearchActive(false);
+    }
+  }, [location.pathname]);
+
   return (
     <div className="Homepage">
       <div className="col1">
@@ -15,7 +28,7 @@ function FlashFeedLayout({ title, children }) {
         <TopBar />
         {children}
       </div>
-      <div className="col3">
+      <div className={`col3 ${searchActive ? "active" : ""}`}>
         <SearchPanel />
       </div>
     </div>
