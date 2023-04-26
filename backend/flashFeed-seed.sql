@@ -1,9 +1,9 @@
 -- Insert users
 INSERT INTO users (username, first_name, last_name, email, password, image_url) VALUES 
-    ('john_doe', 'John', 'Doe', 'john@example.com', 'password123', 'https://example.com/john_doe.png'),
-    ('jane_doe', 'Jane', 'Doe', 'jane@example.com', 'password456', 'https://example.com/jane_doe.png'),
-    ('bob_smith', 'Bob', 'Smith', 'bob@example.com', 'password789', 'https://example.com/bob_smith.png'),
-    ('alice_smith', 'Alice', 'Smith', 'alice@example.com', 'password321', 'https://example.com/alice_smith.png');
+    ('john_doe', 'John', 'Doe', 'john@example.com', 'password123', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRij6dtiHizH96qpCOe8WeXXP3yLyQJkPdGVg&usqp=CAU'),
+    ('jane_doe', 'Jane', 'Doe', 'jane@example.com', 'password456', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_C0QoLfcntJnAuSBm52TShsByZ87m6w6j2g&usqp=CAU'),
+    ('bob_smith', 'Bob', 'Smith', 'bob@example.com', 'password789', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzHQv_th9wq3ivQ1CVk7UZRxhbPq64oQrg5Q&usqp=CAU'),
+    ('alice_smith', 'Alice', 'Smith', 'alice@example.com', 'password321', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAX8p-KrjIxVpsOGeFKJZJR9OVa2tMXyQAlCxT7O-qFqKa242hbZLlOooixmQsvpievEg&usqp=CAU');
 
 -- Insert posts
 INSERT INTO post (user_id, txt_content,  is_private, date_posted) VALUES 
