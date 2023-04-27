@@ -1,12 +1,12 @@
 # Flash Feed
 
-Is Twitter like clone that allows users to post, comment, interact, and follow friends or other users.
+This is the ReactJS frontend & Node.js/Express backend for Flash Feed, version 1.
 
 _CURRENTLY UNDER DEVELOPMENT_
 
 ## Description
 
-This full-stack application which will be used to connect with other users through post, comments and other forms or interaction. This project has no intention of being for real jobs or commercial use. This is purely a personal project.
+Is Flash Feed is a Twitter like clone with some unique changes. This full-stack application which will be used to connect with other users through post, comments and other forms or interaction. This project has no intention of being for real jobs or commercial use. This is purely a personal project.
 
 ## How To Get Started
 
