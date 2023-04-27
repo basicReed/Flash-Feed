@@ -6,7 +6,7 @@ _CURRENTLY UNDER DEVELOPMENT_
 
 ## Description
 
-This full-stack application which will be used to connect with other users through post, comments and other forms or interaction.
+This full-stack application which will be used to connect with other users through post, comments and other forms or interaction. This project has no intention of being for real jobs or commercial use. This is purely a personal project.
 
 ## How To Get Started
 
