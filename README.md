@@ -1,0 +1,44 @@
+# Flash Feed
+
+Is Twitter like clone that allows users to post, comment, interact, and follow friends or other users.
+
+_CURRENTLY UNDER DEVELOPMENT_
+
+## Description
+
+This full-stack application which will be used to connect with other users through post, comments and other forms or interaction.
+
+## How To Get Started
+
+To run this app install the dependencies and run :
+
+```
+node server.js
+
+// or
+
+npm start
+
+```
+
+Requires a postgres database named `flashfeed`. To populate the db in psql run:
+
+```
+-i flashFeed.sql
+```
+
+## Testing
+
+Requires a postgres database named `flashfeed_test`. In the top-level directory, run:
+
+```
+jest -i
+```
+
+## Technologies
+
+This full-stack application uses a backend including Node, Express, and [PostgreSQL](https://github.com/postgres/postgres) database. The frontend uses React as well as number of dependancies.
+
+## Looking Forward
+
+This app is currently being built. Looking forward there are plans to have editable content, nested comments, abilitiy to post picture, emojis, etc, and view counts.

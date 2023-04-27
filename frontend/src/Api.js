@@ -15,7 +15,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error logging in user: ${username}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -42,7 +41,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error posting/registering new user: ${username}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -58,7 +56,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching user with username: ${username}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -78,7 +75,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching users with search term like: ${searchTerm}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -95,7 +91,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error toggling follow for user: ${username} | followed: ${followedUsername}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -116,7 +111,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching follow check for follower: ${followerUsername} | followed: ${followedUsername}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -137,7 +131,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching followed for user with userId: ${userId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -158,7 +151,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching followers for user with userId: ${userId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -178,7 +170,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error creating new post. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -200,7 +191,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching post with postId: ${postId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -218,7 +208,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching post with userId: ${userId} . Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -239,7 +228,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching liked post with userId: ${userId} . Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -260,7 +248,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching posts with userId: ${userId} | Page: ${pageNum}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -281,7 +268,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching feed posts for userId: ${userId} | Page: ${pageNum}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -302,7 +288,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error deleting post with userId: ${userId} | postId: ${postId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -321,7 +306,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error toggling post privacy userId: ${userId} | postId: ${postId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -338,9 +322,8 @@ class FlashFeedApi {
       return response.data.like;
     } catch (error) {
       // Log and throw error if API call fails
-      const errorMessage = `Error liking posts with userId: ${userId} | Page: ${pageNum}. Please try again later.`;
+      const errorMessage = `Error liking posts with userId: ${userId} | postId: ${postId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -361,7 +344,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching comments for post with postId: ${postId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -384,7 +366,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error adding comment to post with postId: ${postId} | userId: ${userId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -405,7 +386,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error fetching users bookmarked posts with userId: ${userId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 
@@ -429,7 +409,6 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error toggling bookmarked of post with postId: ${postId} | userId: ${userId}. Please try again later.`;
       console.error(errorMessage);
-      throw new Error(errorMessage);
     }
   }
 }

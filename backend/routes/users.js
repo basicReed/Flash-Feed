@@ -14,6 +14,7 @@ const Post = require("../models/post");
 const { createToken } = require("../helpers/tokens");
 const userRegisterSchema = require("../schemas/userRegister.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
+const userSearchSchema = require("../schemas/userSearch.json");
 
 const router = new express.Router();
 
@@ -28,14 +29,18 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
 });
 
 // Search for users by username, first name, or last name
-// GET /users/search?query=searchTerm
+// GET /users/search?q=searchTerm
 // Returns [{ userId, username, firstName, lastName, imageUrl }, ...]
 // Ordered by closest matches first.
 
 router.get("/search", async function (req, res, next) {
   try {
+    const validator = jsonschema.validate(req.query, userSearchSchema);
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(errors);
+    }
     const { q } = req.query;
-    console.log("SEARCH 2: ", q);
     const searchTerm = q;
     const users = await User.searchUsers(searchTerm);
     return res.json({ users });
