@@ -1,8 +1,7 @@
 .search-panel-container {
   position: fixed;
   top: 50px;
-
-  width: 18%;
+  width: 22%;
   background-color: white;
   border-left: 1px solid #e6ecf0;
   padding: 10px;
@@ -36,6 +35,12 @@
   margin-top: 20px;
 }
 
+.user-search-section {
+  height: 80vh; /* fixed height */
+  overflow-y: scroll; /* scrollable */
+  /* margin-bottom: 100%; */
+}
+
 .user-search-section,
 .post-search-section {
   margin-bottom: 20px;
@@ -63,7 +68,7 @@
 
 @media (max-width: 1400px) {
   .search-panel-container {
-    width: 22%;
+    width: 25%;
   }
 }
 
