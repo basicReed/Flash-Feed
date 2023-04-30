@@ -16,13 +16,11 @@ const SearchPanel = () => {
   const handleSearchChange = async (event) => {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
-    console.log(`Searching users for ${searchTerm}`);
     clearTimeout(searchTimeout);
     setSearchTimeout(
       setTimeout(async () => {
         try {
           const fetchUsers = await FlashFeedApi.searchUsers(searchTerm);
-          console.log(fetchUsers);
           setUsers(fetchUsers);
         } catch (err) {
           console.error(err);
@@ -32,19 +30,12 @@ const SearchPanel = () => {
   };
 
   const handleUserSearch = async () => {
-    console.log(`Searching users for ${searchTerm}`);
     try {
       const fetchUsers = await FlashFeedApi.searchUsers(searchTerm);
-      console.log(fetchUsers);
       setUsers(fetchUsers);
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const handlePostSearch = () => {
-    console.log(`Searching posts for ${searchTerm}`);
-    // Call API to search for posts with searchTerm
   };
 
   return (
@@ -68,7 +59,7 @@ const SearchPanel = () => {
             Search users for "{searchTerm}"
           </button>
           {users.map((user) => (
-            <UserCard {...user} />
+            <UserCard key={user.userId} {...user} />
           ))}
         </div>
       </div>

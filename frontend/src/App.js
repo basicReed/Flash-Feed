@@ -10,30 +10,32 @@ import Profile from "./Profile";
 import PostAndComments from "./PostAndComments";
 import LoadingIcon from "./LoadingIcon";
 import FlashFeedApi from "./Api";
+import useLocalStorage from "./useLocalStorage";
+import jwt_decode from "jwt-decode";
 
 export const AuthContext = createContext();
+export const TOKEN_STORAGE_ID = "token";
 
 function App() {
-  const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
 
   /**
    * Checks if token is present & setsIsAthenticated
    */
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-
     async function fetchData() {
       if (token) {
         try {
-          let userData = await FlashFeedApi.getUser(username);
+          let decodedToken = jwt_decode(token);
+          let userData = await FlashFeedApi.getUser(decodedToken.username);
           setUser(userData);
         } catch (error) {
           console.log(error);
+          setUser(null);
         }
       }
       setIsLoading(false);
@@ -45,11 +47,12 @@ function App() {
   /**
    *  Stores user data in local storage and sets authentication
    */
-  async function storeUser(token, username) {
+  async function storeUser(newToken, username) {
     //store token in LS
-    localStorage.setItem("token", token);
+    localStorage.setItem("token", newToken);
     localStorage.setItem("username", username);
     setIsAuthenticated(true);
+    setToken(newToken);
   }
 
   /**
@@ -60,6 +63,7 @@ function App() {
     setUser(null);
     setIsAuthenticated(false);
     setIsLoading(true);
+    setToken(null);
   }
 
   //////////////////////////////////////////
@@ -72,16 +76,16 @@ function App() {
       <AuthContext.Provider
         value={{
           isAuthenticated,
+          setIsAuthenticated,
           removeUser,
           user,
         }}
       >
         <BrowserRouter>
           <Routes>
-            <Route path="/" exact="true" element={<Navigate to="/login" />} />
+            {/* <Route path="/" element={<Navigate to="/login" />} /> */}
             <Route
               path="/login"
-              exact="true"
               element={
                 isAuthenticated ? (
                   <Navigate to="/home" />
@@ -92,7 +96,6 @@ function App() {
             />
             <Route
               path="/register"
-              exact="true"
               element={
                 isAuthenticated ? (
                   <Navigate to="/home" />
@@ -105,7 +108,7 @@ function App() {
               <Route
                 path="/*"
                 element={
-                  isAuthenticated ? (
+                  user ? (
                     <FlashFeedLayout>
                       <Routes>
                         <Route

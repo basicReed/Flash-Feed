@@ -24,7 +24,6 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
           break;
         case "following":
           tabData = await FlashFeedApi.getFollowed(user.userId);
-          console.log("tab data: ", tabData);
           setFollowing(tabData);
           break;
         case "followers":
@@ -59,6 +58,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
           {following &&
             following.map((followed) => (
               <UserCard
+                key={followed.userId}
                 followingCountUpdate={followingCountUpdate}
                 {...followed}
               />
@@ -73,6 +73,7 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
           {followers &&
             followers.map((follows) => (
               <UserCard
+                key={follows.userId}
                 followingCountUpdate={followingCountUpdate}
                 {...follows}
               />

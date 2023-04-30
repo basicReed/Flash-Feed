@@ -102,7 +102,9 @@ const Post = (props) => {
           )}
           <div className="post-info">
             <h2>{username}</h2>
-            <p>{<ReactTimeAgo date={timestamp} locale="en-US" />}</p>
+            <p>
+              {<ReactTimeAgo date={Date.parse(timestamp)} locale="en-US" />}
+            </p>
           </div>
         </div>
         <div className="post-options">

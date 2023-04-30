@@ -29,20 +29,20 @@ const NavBar = ({ onSearchToggle }) => {
               <h1>Flash Feed</h1>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/home" exact>
+              <NavLink className="nav-link" to="/home">
                 <FontAwesomeIcon icon={faHome} />
                 <span className="ms-2">Home</span>
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/bookmarks" exact>
+              <NavLink className="nav-link" to="/bookmarks">
                 <FontAwesomeIcon icon={faBookmark} />
                 <span className="ms-2">Bookmarks</span>
               </NavLink>
             </li>
 
             <li className={`nav-item nav-search `}>
-              <NavLink className="nav-link" to="/search" exact>
+              <NavLink className="nav-link" to="/search">
                 <FontAwesomeIcon icon={faSearch} />
               </NavLink>
             </li>
@@ -51,7 +51,6 @@ const NavBar = ({ onSearchToggle }) => {
               <NavLink
                 className="nav-link"
                 to={`/profile/${localStorage.getItem("username")}`}
-                exact
               >
                 <FontAwesomeIcon icon={faUser} />
                 <span className="ms-2">Profile</span>

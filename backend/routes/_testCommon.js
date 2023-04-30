@@ -89,8 +89,6 @@ const u1Token = createToken({ username: "user1", userId: testUserIds[0] });
 const u2Token = createToken({ username: "user2", userId: testUserIds[1] });
 const u3Token = createToken({ username: "user3", userId: testUserIds[2] });
 
-console.log("u1Token: ", u1Token);
-
 module.exports = {
   commonBeforeAll,
   commonBeforeEach,

@@ -72,7 +72,7 @@ describe("register", function () {
 describe("get", function () {
   test("get user by username", async function () {
     const user = await User.get("user1");
-    console.log("PRINT: ", user);
+
     expect(user).toEqual({
       username: "user1",
       firstName: "Test",

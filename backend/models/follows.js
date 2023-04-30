@@ -66,7 +66,6 @@ class Follow {
    */
 
   static async isFollowing(followerUsername, followedUsername) {
-    console.log(followerUsername, followedUsername);
     const result = await db.query(
       `SELECT follower_id, followed_id
        FROM follow f

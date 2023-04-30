@@ -34,7 +34,6 @@ router.get(
   // ensureLoggedIn,
   // ensureCorrectUser,
   async function (req, res, next) {
-    console.log("MADE IT HERE");
     try {
       const { user: userId, page: pageNum } = req.query;
       const posts = await Post.getAllFromFollowed(userId, pageNum);
@@ -148,7 +147,6 @@ router.delete(
   async function (req, res, next) {
     try {
       const { postId } = req.params;
-      console.log("POST ID: ", postId);
 
       await Post.delete(postId);
       return res.json({ deleted: postId });

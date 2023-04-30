@@ -120,7 +120,7 @@ class User {
     );
 
     const user = userRes.rows[0];
-    console.log("USER INFO: ", user);
+
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
     return user;
@@ -201,7 +201,7 @@ class User {
    */
   static async searchUsers(searchTerm) {
     // Search for users by username, first name, or last name
-    console.log("HELLOOOOO");
+
     const query = `
         SELECT user_id AS "userId", username, first_name AS "firstName",
                last_name AS "lastName", image_url AS "profileImage"
@@ -214,7 +214,7 @@ class User {
                  (last_name ILIKE $1) DESC
       `;
     const result = await db.query(query, [`%${searchTerm}%`]);
-    console.log(result.rows);
+
     return result.rows;
   }
 }

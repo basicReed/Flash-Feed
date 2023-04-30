@@ -30,7 +30,7 @@ router.post("/token", async function (req, res, next) {
 
     const { username, password } = req.body;
     const user = await User.authenticate(username, password);
-    console.log("TOKEN: USER WHEN LOGGED IN: ", user);
+
     const token = createToken(user);
 
     return res.json({ token });
@@ -50,7 +50,6 @@ router.post("/token", async function (req, res, next) {
 
 router.post("/register", async function (req, res, next) {
   try {
-    console.log("Got to post");
     const validator = jsonschema.validate(req.body, userRegisterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
@@ -58,11 +57,10 @@ router.post("/register", async function (req, res, next) {
     }
 
     const newUser = await User.register({ ...req.body });
-    console.log("REGISTER: newUser: ", newUser);
+
     const token = createToken(newUser);
     return res.status(201).json({ token });
   } catch (err) {
-    console.log("Broken post");
     return next(err);
   }
 });

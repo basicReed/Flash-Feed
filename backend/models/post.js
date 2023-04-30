@@ -72,7 +72,7 @@ class Post {
     `,
       [userId, false, pageSize, offset]
     );
-    console.log("lenghth: ", results.rows.length);
+
     return results.rows;
   }
 
@@ -102,7 +102,7 @@ class Post {
       LIMIT $3 OFFSET $4`,
       [userId, false, pageSize, offset]
     );
-    console.log("lenghth: ", results.rows.length);
+
     return results.rows;
   }
 

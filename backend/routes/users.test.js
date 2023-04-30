@@ -87,7 +87,7 @@ describe("PATCH /users/:username", () => {
         imgUrl: "hello.jpg",
       })
       .set("authorization", `Bearer ${token}`);
-    console.log(response.body.user);
+
     expect(response.statusCode).toBe(200);
     expect(response.body.user.firstName).toBe("Updated");
   });

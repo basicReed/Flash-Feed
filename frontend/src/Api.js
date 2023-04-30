@@ -15,6 +15,7 @@ class FlashFeedApi {
       // Log and throw error if API call fails
       const errorMessage = `Error logging in user: ${username}. Please try again later.`;
       console.error(errorMessage);
+      throw new Error(errorMessage);
     }
   }
 
@@ -63,7 +64,7 @@ class FlashFeedApi {
   static async searchUsers(searchTerm) {
     try {
       let token = localStorage.getItem("token");
-      console.log(searchTerm);
+
       let response = await axios.get(
         `${BASE_API_URL}/users/search?q=${searchTerm}`,
         {
@@ -98,7 +99,7 @@ class FlashFeedApi {
   static async isFollowing(followerUsername, followedUsername) {
     try {
       let token = localStorage.getItem("token");
-      console.log("route check: ", followerUsername, followedUsername);
+
       let response = await axios.get(
         `${BASE_API_URL}/follows/is-following?followerUsername=${followerUsername}&followedUsername=${followedUsername}`,
         {

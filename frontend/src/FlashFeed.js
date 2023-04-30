@@ -6,6 +6,7 @@ import LoadingIcon from "./LoadingIcon";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FlashFeedApi from "./Api";
 import { useLocation } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 function FlashFeed() {
   const { user } = useContext(AuthContext);
@@ -58,7 +59,7 @@ function FlashFeed() {
             <PostForm onPost={addNewPost} />
             {/* List of Posts */}
             {posts.map((post) => (
-              <Post key={post.postId} user={user} {...post} />
+              <Post key={uuidv4()} user={user} {...post} />
             ))}
           </div>
         </div>

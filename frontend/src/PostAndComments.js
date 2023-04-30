@@ -77,7 +77,10 @@ const PostAndComments = () => {
                   <p className="name">{c.username}</p>
                   <p>{c.txtContent}</p>
                   <p className="timestamp">
-                    <ReactTimeAgo date={c.dateCommented} locale="en-US" />
+                    <ReactTimeAgo
+                      date={Date.parse(c.dateCommented)}
+                      locale="en-US"
+                    />
                   </p>
                 </div>
               </div>
