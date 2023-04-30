@@ -8,7 +8,8 @@ CREATE TABLE users (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    image_url VARCHAR(1000)
+    image_url VARCHAR(1000),
+    date_joined TIMESTAMP DEFAULT clock_timestamp()
 );
 
 -- Create Post Table

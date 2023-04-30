@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_API_URL = "https://flashfeedapp.herokuapp.com";
+const BASE_API_URL = "http://localhost:3001";
 
 class FlashFeedApi {
   // POST to authenticate user and return JWT token

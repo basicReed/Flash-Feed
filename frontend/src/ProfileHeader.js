@@ -1,6 +1,7 @@
 import React from "react";
 import backupUserImg from "./backupUserImg.jpeg";
 import "./ProfileHeader.css";
+import moment from "moment";
 
 const ProfileHeader = ({ user, numPosts, numFollowing, numFollowers }) => {
   return (
@@ -22,7 +23,8 @@ const ProfileHeader = ({ user, numPosts, numFollowing, numFollowers }) => {
         <p>This is bio</p>
         <ul>
           <li>
-            <i className="far fa-calendar-alt"></i>Joined Feb 7 1999
+            <i className="far fa-calendar-alt"></i>Joined{" "}
+            {moment(Date.parse(user.dateJoined)).format("MMM D YYYY")}
           </li>
         </ul>
       </div>

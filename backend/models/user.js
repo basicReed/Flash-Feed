@@ -111,6 +111,7 @@ class User {
               last_name AS "lastName",
               email,
               image_url AS "profileImage",
+              date_joined AS "dateJoined",
               (SELECT COUNT(*) FROM post WHERE user_id = users.user_id) AS "postCount",
               (SELECT COUNT(*) FROM follow WHERE followed_id = users.user_id) AS "followersCount",
               (SELECT COUNT(*) FROM follow WHERE follower_id = users.user_id) AS "followingCount"
@@ -138,7 +139,8 @@ class User {
                   first_name AS "firstName",
                   last_name AS "lastName",
                   email,
-                  image_url AS "profileImage"
+                  image_url AS "profileImage",
+                  date_joined AS "dateJoined"
           FROM users
           WHERE user_id = $1`,
       [userId]
