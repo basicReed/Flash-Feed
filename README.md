@@ -9,13 +9,11 @@ _CURRENTLY UNDER DEVELOPMENT_
 
 ## Description
 
-Is Flash Feed is a Twitter like clone with some unique changes. This full-stack application which will be used to connect with other users through post, comments and other forms or interaction. This project has no intention of being for real jobs or commercial use. This is purely a personal project.
+Is Flash Feed is a Twitter like clone with some unique changes. This full-stack reponsive application which will be used to connect with other users through post, comments and other forms or interaction. This project has no intention of being for real jobs or commercial use. This is purely a personal project.
 
 <img width="200" alt="MyGrub Home" src="https://user-images.githubusercontent.com/109553225/235499204-d266543d-d585-4505-aff3-365ff4dd94d8.png">
 
 <img width="200" alt="MyGrub Home" src="https://user-images.githubusercontent.com/109553225/235499379-af3310b3-1388-429d-8a74-09d1df863ae6.png">
-
-<img width="100" alt="MyGrub Home" src="https://user-images.githubusercontent.com/109553225/235499596-29568ffc-1108-44ee-ac30-ef6792159ef1.png">
 
 ## How To Get Started
 
