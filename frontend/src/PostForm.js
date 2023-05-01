@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import "./PostForm.css";
 import FlashFeedApi from "./Api";
+import Picker from "@emoji-mart/react";
 
 const MAX_CHARACTERS = 1000;
 
 const PostForm = ({ onPost }) => {
   const [txtContent, setTextContent] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleTextChange = (event) => {
     const value = event.target.value;
@@ -16,10 +18,12 @@ const PostForm = ({ onPost }) => {
     }
   };
 
+  // Make private
   const handlePrivateChange = (event) => {
     setIsPrivate(event.target.checked);
   };
 
+  // POST
   const handlePost = async () => {
     try {
       let post = await FlashFeedApi.post(txtContent, isPrivate);
@@ -31,10 +35,16 @@ const PostForm = ({ onPost }) => {
     setIsPrivate(false);
   };
 
+  // Append emoji
+  const handleEmojiClick = (emoji) => {
+    setTextContent(txtContent + emoji.native);
+  };
+
   const remainingChars = MAX_CHARACTERS - txtContent.length;
 
   return (
     <div className="post-form">
+      {/* POST TEXTBOX */}
       <GrammarlyEditorPlugin clientId="client_Ey7sNT8Qtf8v9eZMzZCTPF">
         <textarea
           placeholder="What's up?"
@@ -43,6 +53,28 @@ const PostForm = ({ onPost }) => {
         />
       </GrammarlyEditorPlugin>
       <div className="post-form-options">
+        {/* PICK EMOJIS */}
+        <div className="emoji-container">
+          <div
+            className="far fa-smile"
+            style={{ color: "#5b7083" }}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          />
+          {showEmojiPicker && (
+            <div className="emoji-picker">
+              <Picker
+                className="emoji-picker"
+                title="Pick your emoji…"
+                emoji="point_up"
+                emojiSize={20}
+                showPreview={false}
+                perLine={7}
+                onEmojiSelect={(emoji) => handleEmojiClick(emoji)}
+              />
+            </div>
+          )}
+        </div>
+        {/* MAKE POST PRIVATE */}
         <label>
           <input
             type="checkbox"
@@ -51,8 +83,10 @@ const PostForm = ({ onPost }) => {
           />
           Private
         </label>
+        {/* CHAR COUNT for POST */}
         <span className="post-char-counter">{remainingChars}</span>
       </div>
+
       <button onClick={handlePost}>Post</button>
     </div>
   );

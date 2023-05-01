@@ -10,6 +10,10 @@
   list-style: none;
 }
 
+.nav-logo img {
+  width: 60px;
+}
+
 /* Set vertical spacing between li elements */
 .navbar-nav li {
   margin-bottom: 30px;
@@ -64,10 +68,6 @@
     padding-left: 0;
     margin-left: 40px;
   }
-  /* Hide the h1 element */
-  .navbar-nav > li:first-child {
-    display: none;
-  }
 
   .ms-2 {
     display: none;
@@ -76,6 +76,10 @@
   /* Add spacing between icon and text */
   .navbar-nav .nav-link svg {
     margin-right: 0px;
+  }
+
+  .nav-logo img {
+    width: 40px;
   }
 }
 
@@ -119,5 +123,10 @@
     color: #1da1f2;
 
     border-top: 2px solid #1da1f2;
+  }
+
+  /* Hide the logo element from nav*/
+  .navbar-nav > li:first-child {
+    display: none;
   }
 }

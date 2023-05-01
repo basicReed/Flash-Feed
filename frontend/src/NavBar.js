@@ -25,8 +25,8 @@ const NavBar = ({ onSearchToggle }) => {
       <div className="container-fluid">
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
-            <li>
-              <h1>Flash Feed</h1>
+            <li className="nav-iten nav-logo">
+              <img src="/logo105.png" />
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/home">

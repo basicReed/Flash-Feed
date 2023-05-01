@@ -22,7 +22,7 @@
 
 .post-form-options {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   margin-bottom: 16px;
 }
@@ -63,8 +63,8 @@
 }
 
 .post-char-counter {
+  margin-left: auto;
   font-size: 16px;
-
   color: #5b7083;
 }
 
@@ -83,4 +83,30 @@
 
 .post-form button:hover {
   background-color: #0c7abf;
+}
+
+.emoji-container {
+  position: relative;
+}
+
+.post-form-options .fa-smile {
+  margin-right: 25px;
+  font-size: 24px;
+}
+
+.post-form-options .fa-smile:hover {
+  cursor: pointer;
+}
+
+.emoji-picker {
+  z-index: 100;
+  position: absolute;
+  top: 25px;
+  left: 25px;
+}
+
+@media (max-width: 420px) {
+  .emoji-picker {
+    left: -15px;
+  }
 }

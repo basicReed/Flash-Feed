@@ -24,7 +24,10 @@ function Login({ storeUser }) {
       <div className="profile-form">
         <div className="card card-form">
           <div className="card-body">
-            <h1>Login</h1>
+            <div className="auth-header">
+              <img src="/logo105.png" />
+              <h1>Login</h1>
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>
