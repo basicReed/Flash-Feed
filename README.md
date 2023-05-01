@@ -2,6 +2,8 @@
 
 This is the ReactJS frontend & Node.js/Express backend for Flash Feed, version 1.
 
+Live Demo: [FLASH FEED](https://jordans-flashfeed-app.surge.sh)
+
 _CURRENTLY UNDER DEVELOPMENT_
 
 ## Description
@@ -41,4 +43,6 @@ This full-stack application uses a backend including Node, Express, and [Postgre
 
 ## Looking Forward
 
-This app is currently being built. Looking forward there are plans to have editable content, nested comments, abilitiy to post picture, emojis, etc, and view counts.
+Editable profile and post will be in the next update.
+
+This app is currently being built. Looking forward there are plans to have editable content, nested comments, abilitiy to post picture and view counts.
