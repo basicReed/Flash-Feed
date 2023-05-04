@@ -45,6 +45,9 @@ function ensureLoggedIn(req, res, next) {
 
 /** Middleware to use when they must provide a valid token & be user matching
  *  username provided as route param.
+
+ *  Accepts userId, postId, username, or currUser for both params or body
+ *      - userId additionally accepts a query
  *
  *  If not, raises Unauthorized.
  */
