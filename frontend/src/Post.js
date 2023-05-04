@@ -63,7 +63,6 @@ const Post = (props) => {
       // Update the state immediately
       setBookmarked(!bookmarked);
       // Make API call
-
       await FlashFeedApi.bookmarkOrRemove(user.userId, postId);
     } catch (err) {
       console.log("Error bookmarking post:", err);
@@ -78,6 +77,7 @@ const Post = (props) => {
     navigate(`/post/${postId}`);
   };
 
+  // Delete Post from db and UI
   const handleDeleteClick = async () => {
     try {
       await FlashFeedApi.deletePost(postId, user.userId);
@@ -87,6 +87,7 @@ const Post = (props) => {
     }
   };
 
+  // return no post if !showPost
   if (!showPost) {
     return null;
   }

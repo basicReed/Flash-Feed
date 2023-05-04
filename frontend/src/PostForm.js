@@ -11,6 +11,7 @@ const PostForm = ({ onPost }) => {
   const [isPrivate, setIsPrivate] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+  // update text content for each char if less than MAX_CHARACTERS
   const handleTextChange = (event) => {
     const value = event.target.value;
     if (value.length <= MAX_CHARACTERS) {

@@ -12,6 +12,8 @@ const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
   const [likes, setLikes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check for tab each time activeTabe changes.
+  // tab case will call data for current tab
   useEffect(() => {
     async function getTabData() {
       setIsLoading(true);

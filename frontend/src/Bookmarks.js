@@ -10,6 +10,7 @@ const Bookmarks = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Get users bookmarked posts
     async function getPosts() {
       const fetchedPosts = await FlashFeedApi.getUserBookmarks(user.userId);
 

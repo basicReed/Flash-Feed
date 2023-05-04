@@ -30,10 +30,12 @@ function FlashFeed() {
     setPage(page + 1);
   }
 
+  // Prepend post to page
   const addNewPost = (post) => {
     setPosts((prevPosts) => [post, ...prevPosts]);
   };
 
+  // if location changes get post (used for loading home vs my-feed posts)
   useEffect(() => {
     getPosts();
   }, [location]);
@@ -59,6 +61,7 @@ function FlashFeed() {
             <PostForm onPost={addNewPost} />
             {/* List of Posts */}
             {posts.map((post) => (
+              // unique id for each component
               <Post key={uuidv4()} user={user} {...post} />
             ))}
           </div>

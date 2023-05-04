@@ -17,10 +17,12 @@ const Profile = () => {
   const [followingCount, setFollowingCount] = useState("-");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Set active tap for ProfileContent to render
   const onTabChange = (tabName) => {
     setActiveTab(tabName);
   };
 
+  // Update follow count when click follow/unfollow toggle
   const followingCountUpdate = (follow) => {
     if (username == activeUsername) {
       follow
