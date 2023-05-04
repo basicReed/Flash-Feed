@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
-import { AuthContext } from "./App";
+import { AuthContext } from "../App";
 import { useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import Post from "./Post";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../Profile/ProfileImage";
 import "./PostAndComments.css";
-import FlashFeedApi from "./Api";
-import LoadingIcon from "./LoadingIcon";
+import FlashFeedApi from "../Api";
+import LoadingIcon from "../Resources/LoadingIcon";
 
 const PostAndComments = () => {
   const { user } = useContext(AuthContext);

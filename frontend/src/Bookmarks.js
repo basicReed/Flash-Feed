@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./App";
-import Post from "./Post";
-import LoadingIcon from "./LoadingIcon";
+import Post from "./Post/Post";
+import LoadingIcon from "./Resources/LoadingIcon";
 import FlashFeedApi from "./Api";
 
 const Bookmarks = () => {

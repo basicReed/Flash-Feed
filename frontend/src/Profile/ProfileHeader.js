@@ -1,5 +1,5 @@
 import React from "react";
-import backupUserImg from "./backupUserImg.jpeg";
+import backupUserImg from "../Resources/backupUserImg.jpeg";
 import "./ProfileHeader.css";
 import moment from "moment";
 

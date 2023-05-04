@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 import "./LoginRegister.css";
 
 function Register({ storeUser }) {

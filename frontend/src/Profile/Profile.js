@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "./App";
+import { AuthContext } from "../App";
 import { useParams } from "react-router-dom";
 import ProfileContent from "./ProfileContent";
 import ProfileHeader from "./ProfileHeader";
 import ProfileNavigation from "./ProfileNavigation";
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);

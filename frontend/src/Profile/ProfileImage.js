@@ -1,6 +1,6 @@
 import React from "react";
 import "./ProfileImage.css";
-import backupUserImg from "./backupUserImg.jpeg";
+import backupUserImg from "../Resources/backupUserImg.jpeg";
 
 const ProfileImage = ({ imageUrl }) => {
   return (

@@ -1,16 +1,16 @@
 import "./App.css";
 import React, { useState, useEffect, createContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./Login";
-import Register from "./Register";
-import FlashFeedLayout from "./FlashFeedLayout";
+import Login from "./Auth/Login";
+import Register from "./Auth/Register";
+import FlashFeedLayout from "./Layout/FlashFeedLayout";
 import FlashFeed from "./FlashFeed";
 import Bookmarks from "./Bookmarks";
-import Profile from "./Profile";
-import PostAndComments from "./PostAndComments";
-import LoadingIcon from "./LoadingIcon";
+import Profile from "./Profile/Profile";
+import PostAndComments from "./Post/PostAndComments";
+import LoadingIcon from "./Resources/LoadingIcon";
 import FlashFeedApi from "./Api";
-import useLocalStorage from "./useLocalStorage";
+import useLocalStorage from "./Resources/useLocalStorage";
 import jwt_decode from "jwt-decode";
 
 export const AuthContext = createContext();

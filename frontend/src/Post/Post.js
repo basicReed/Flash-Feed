@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "./App";
-import ProfileImage from "./ProfileImage";
+import { AuthContext } from "../App";
+import ProfileImage from "../Profile/ProfileImage";
 import PostOptions from "./PostOptions";
 import "./Post.css";
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 import ReactTimeAgo from "react-time-ago";
 import { useNavigate } from "react-router-dom";
-import backupUserImg from "./backupUserImg.jpeg";
+import backupUserImg from "../Resources/backupUserImg.jpeg";
 
 const Post = (props) => {
   const {

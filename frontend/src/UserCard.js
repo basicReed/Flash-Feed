@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "./Profile/ProfileImage";
 import { useNavigate } from "react-router-dom";
 import FlashFeedApi from "./Api";
 

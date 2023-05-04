@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import "./PostForm.css";
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 import Picker from "@emoji-mart/react";
 
 const MAX_CHARACTERS = 1000;

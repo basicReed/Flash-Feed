@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./App";
-import PostForm from "./PostForm";
-import Post from "./Post";
-import LoadingIcon from "./LoadingIcon";
+import PostForm from "./Post/PostForm";
+import Post from "./Post/Post";
+import LoadingIcon from "./Resources/LoadingIcon";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FlashFeedApi from "./Api";
 import { useLocation } from "react-router-dom";

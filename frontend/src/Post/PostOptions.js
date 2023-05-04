@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 import "./PostOptions.css";
 
 const PostOptions = ({ user, postId, isPrivate, onDelete, username }) => {

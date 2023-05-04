@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import FlashFeedApi from "./Api";
+import FlashFeedApi from "../Api";
 
 function TopBar() {
   const navigate = useNavigate();

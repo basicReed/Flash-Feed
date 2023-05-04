@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import UserCard from "./UserCard";
-import FlashFeedApi from "./Api";
+import UserCard from "../UserCard";
+import FlashFeedApi from "../Api";
 import "./SearchPanel.css";
 
 const SearchPanel = () => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import FlashFeedApi from "./Api";
-import UserCard from "./UserCard";
-import LoadingIcon from "./LoadingIcon";
-import Post from "./Post";
+import FlashFeedApi from "../Api";
+import UserCard from "../UserCard";
+import LoadingIcon from "../Resources/LoadingIcon";
+import Post from "../Post/Post";
 
 const ProfileContent = ({ activeTab, user, followingCountUpdate }) => {
   let content;
