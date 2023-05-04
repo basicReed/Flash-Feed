@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_API_URL = "https://flashfeedapp.herokuapp.com";
+const BASE_API_URL = "http://localhost:3001";
+// Test: http://localhost:3001
+// Prod: https://flashfeedapp.herokuapp.com
 
 class FlashFeedApi {
   // POST to authenticate user and return JWT token
@@ -258,7 +260,7 @@ class FlashFeedApi {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.get(
-        `${BASE_API_URL}/posts/my-feed?user=${userId}&page=${pageNum}`,
+        `${BASE_API_URL}/posts/my-feed?userId=${userId}&page=${pageNum}`,
         {
           headers,
         }

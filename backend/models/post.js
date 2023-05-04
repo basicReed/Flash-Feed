@@ -78,6 +78,8 @@ class Post {
       [userId, false, pageSize, offset]
     );
 
+    if (!results.rows[0]) throw new NotFoundError(`No posts`);
+
     return results.rows;
   }
 
@@ -114,6 +116,9 @@ class Post {
       LIMIT $3 OFFSET $4`,
       [userId, false, pageSize, offset]
     );
+
+    if (!results.rows[0])
+      throw new NotFoundError(`No users followed for user: ${userId}`);
 
     return results.rows;
   }
@@ -153,6 +158,9 @@ class Post {
       [userId]
     );
     const posts = result.rows;
+
+    if (!result.rows[0])
+      throw new NotFoundError(`No posts not found for user: ${userId}`);
 
     return posts;
   }
@@ -247,6 +255,9 @@ class Post {
       [userId]
     );
     const liked = results.rows;
+
+    if (!results.rows[0])
+      throw new NotFoundError(`No Liked Post for user: ${userId}`);
 
     return liked;
   }

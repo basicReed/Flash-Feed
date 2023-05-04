@@ -7,18 +7,22 @@ const { BadRequestError, NotFoundError } = require("../expressError");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
 const Post = require("../models/post");
-const postGetLikedSchema = require("../schemas/postGetLiked.json");
-const postGetByUserSchema = require("../schemas/postGetByUser.json");
 const postGetAllSchema = require("../schemas/postGetAll.json");
 const postGetSchema = require("../schemas/postGet.json");
 const postCreateSchema = require("../schemas/postCreate.json");
+const postMyFeedSchema = require("../schemas/postMyFeedSchema.json");
 const jwt = require("jsonwebtoken");
-const { token } = require("morgan");
 
 // GET /posts
 // Returns list of all posts or posts from a specific user
 router.get("/", ensureLoggedIn, async function (req, res, next) {
   try {
+    const validator = jsonschema.validate(req.query, postGetAllSchema);
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(errors);
+    }
+
     const { user: userId, page: pageNum } = req.query;
     const posts = await Post.getAll(userId, pageNum);
     return res.json({ posts });
@@ -31,11 +35,17 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
 // Returns list of all posts from users that are followed by current user
 router.get(
   "/my-feed",
-  // ensureLoggedIn,
-  // ensureCorrectUser,
+  ensureLoggedIn,
+  ensureCorrectUser,
   async function (req, res, next) {
     try {
-      const { user: userId, page: pageNum } = req.query;
+      const validator = jsonschema.validate(req.query, postMyFeedSchema);
+      if (!validator.valid) {
+        const errors = validator.errors.map((e) => e.stack);
+        throw new BadRequestError(errors);
+      }
+
+      const { userId: userId, page: pageNum } = req.query;
       const posts = await Post.getAllFromFollowed(userId, pageNum);
       return res.json({ posts });
     } catch (err) {
@@ -48,6 +58,12 @@ router.get(
 // Returns details of a single post by ID
 router.get("/:postId", ensureLoggedIn, async function (req, res, next) {
   try {
+    const validator = jsonschema.validate(req.query, postGetSchema);
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(errors);
+    }
+
     const { postId } = req.params;
     const { userId } = req.query;
 
@@ -59,7 +75,7 @@ router.get("/:postId", ensureLoggedIn, async function (req, res, next) {
 });
 
 // GET /posts/:id/liked
-// Returns list of all users who liked a post by ID
+// Returns list of all posts user likes
 router.get("/:userId/liked", ensureLoggedIn, async function (req, res, next) {
   try {
     const userId = req.params.userId;
@@ -76,12 +92,6 @@ router.get("/:userId/liked", ensureLoggedIn, async function (req, res, next) {
 router.get("/user/:userId", ensureLoggedIn, async function (req, res, next) {
   try {
     const { userId } = req.params;
-
-    // const validator = jsonschema.validate(req.body, postGetByUserSchema);
-    // if (!validator.valid) {
-    //   const errors = validator.errors.map((e) => e.stack);
-    //   throw new BadRequestError(errors);
-    // }
     const posts = await Post.getAllByUser(userId);
 
     return res.json({ posts });

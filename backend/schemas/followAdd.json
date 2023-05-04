@@ -1,28 +1,27 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://example.com/example.json",
   "type": "object",
   "default": {},
   "title": "Root Schema",
-  "required": ["followerId", "followedId"],
+  "required": ["username", "followedUsername"],
   "properties": {
-    "followerId": {
-      "type": "integer",
-      "default": 0,
-      "title": "The followerId Schema",
-      "examples": [1]
+    "username": {
+      "type": "string",
+      "default": "",
+      "title": "The username Schema",
+      "examples": ["Basic"]
     },
-    "followedId": {
-      "type": "integer",
-      "default": 0,
-      "title": "The followedId Schema",
-      "examples": [2]
+    "followedUsername": {
+      "type": "string",
+      "default": "",
+      "title": "The followedUsername Schema",
+      "examples": ["Jordan"]
     }
   },
   "examples": [
     {
-      "followerId": 1,
-      "followedId": 2
+      "username": "Basic",
+      "followedUsername": "Jordan"
     }
   ]
 }

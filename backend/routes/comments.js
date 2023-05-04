@@ -9,10 +9,7 @@ const router = new express.Router();
 const { BadRequestError } = require("../expressError");
 const Comment = require("../models/comments");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
-const { createToken } = require("../helpers/tokens");
 const commentCreateSchema = require("../schemas/commentCreate.json");
-const commentDeleteSchema = require("../schemas/commentDelete.json");
-const commentGetForPostSchema = require("../schemas/commentGetForPost.json");
 
 /** POST /comments/create
  * CREATE a new comment for a post

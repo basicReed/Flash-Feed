@@ -5,12 +5,9 @@ const { BadRequestError } = require("../expressError");
 const Follow = require("../models/follows");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 const followAddSchema = require("../schemas/followAdd.json");
-const followFollowedUsersSchema = require("../schemas/followFollowedUsers.json");
-const followGetFollowersSchema = require("../schemas/followGetFollowers.json");
 const followIsFollowingSchema = require("../schemas/followIsFollowing.json");
-const followRemoveSchema = require("../schemas/followRemove.json");
 
-/** POST / follows/add
+/** POST / follows/toggle
  *  { follower_id, followed_id } => { follower_id, followed_id }
  *
  * Adds a follow relationship between a follower and someone they followed
@@ -24,11 +21,11 @@ router.post(
   ensureCorrectUser,
   async function (req, res, next) {
     try {
-      // const validator = jsonschema.validate(req.body, followAddSchema);
-      // if (!validator.valid) {
-      //   const errors = validator.errors.map((e) => e.stack);
-      //   throw new BadRequestError(errors);
-      // }
+      const validator = jsonschema.validate(req.body, followAddSchema);
+      if (!validator.valid) {
+        const errors = validator.errors.map((e) => e.stack);
+        throw new BadRequestError(errors);
+      }
 
       const { username, followedUsername } = req.body;
 
@@ -47,11 +44,11 @@ router.post(
  * Authorization required: logged in user
  */
 router.get("/is-following", ensureLoggedIn, async function (req, res, next) {
-  // const validator = jsonschema.validate(req.body, followIsFollowingSchema);
-  // if (!validator.valid) {
-  //   const errors = validator.errors.map((e) => e.stack);
-  //   throw new BadRequestError(errors);
-  // }
+  const validator = jsonschema.validate(req.query, followIsFollowingSchema);
+  if (!validator.valid) {
+    const errors = validator.errors.map((e) => e.stack);
+    throw new BadRequestError(errors);
+  }
 
   try {
     const { followerUsername, followedUsername } = req.query; // Extract variables from query string
