@@ -4,7 +4,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import UserCard from "./UserCard";
 import FlashFeedApi from "./Api";
 import "./SearchPanel.css";
-import axios from "axios";
 
 const SearchPanel = () => {
   const [searchTerm, setSearchTerm] = useState("");

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "./App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +11,7 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
-const NavBar = ({ onSearchToggle }) => {
+const NavBar = () => {
   const { removeUser } = useContext(AuthContext);
   const navigate = useNavigate();
 

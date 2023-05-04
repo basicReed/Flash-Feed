@@ -83,7 +83,14 @@ function App() {
       >
         <BrowserRouter>
           <Routes>
-            {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+            {/* Check login & route | redirect if no route */}
+            <Route
+              path="/*"
+              element={
+                user ? <Navigate to="/home" /> : <Navigate to="/login" />
+              }
+            />
+            {/* AUTH ROUTES (plans to move to seperate file)*/}
             <Route
               path="/login"
               element={
@@ -104,38 +111,47 @@ function App() {
                 )
               }
             />
-            <>
-              <Route
-                path="/*"
-                element={
-                  user ? (
-                    <FlashFeedLayout>
-                      <Routes>
-                        <Route
-                          path="/home"
-                          element={<FlashFeed key={"Home"} />}
-                        />
-                        <Route
-                          path="/home/my-feed"
-                          element={<FlashFeed key={"Feed"} />}
-                        />
-                        <Route path="/bookmarks" element={<Bookmarks />} />
-                        <Route
-                          path="/profile/:username"
-                          element={<Profile />}
-                        />
-                        <Route
-                          path="/post/:postId"
-                          element={<PostAndComments />}
-                        />
-                      </Routes>
-                    </FlashFeedLayout>
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-            </>
+            {/* MAIN ROUTES  (plans to move to seperate file)*/}
+            <Route
+              path="/home"
+              element={
+                <FlashFeedLayout>
+                  <FlashFeed key={"Home"} />
+                </FlashFeedLayout>
+              }
+            />
+            <Route
+              path="/home/my-feed"
+              element={
+                <FlashFeedLayout>
+                  <FlashFeed key={"Feed"} />
+                </FlashFeedLayout>
+              }
+            />
+            <Route
+              path="/bookmarks"
+              element={
+                <FlashFeedLayout>
+                  <Bookmarks />
+                </FlashFeedLayout>
+              }
+            />
+            <Route
+              path="/profile/:username"
+              element={
+                <FlashFeedLayout>
+                  <Profile />
+                </FlashFeedLayout>
+              }
+            />
+            <Route
+              path="/post/:postId"
+              element={
+                <FlashFeedLayout>
+                  <PostAndComments />
+                </FlashFeedLayout>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
