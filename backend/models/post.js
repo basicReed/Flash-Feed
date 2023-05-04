@@ -78,8 +78,6 @@ class Post {
       [userId, false, pageSize, offset]
     );
 
-    if (!results.rows[0]) throw new NotFoundError(`No posts`);
-
     return results.rows;
   }
 
@@ -116,9 +114,6 @@ class Post {
       LIMIT $3 OFFSET $4`,
       [userId, false, pageSize, offset]
     );
-
-    if (!results.rows[0])
-      throw new NotFoundError(`No users followed for user: ${userId}`);
 
     return results.rows;
   }
