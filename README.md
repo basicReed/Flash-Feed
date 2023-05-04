@@ -48,6 +48,4 @@ This full-stack application uses a backend including Node, Express, and [Postgre
 
 ## Looking Forward
 
-Editable profile and post will be in the next update.
-
-This app is currently being built. Looking forward there are plans to have editable content, nested comments, abilitiy to post picture and view counts.
+Upcoming Features: -frontend test -notifications/warnings for user interface - Editable profile - Editable post and other content - Nested comments - Collect post view counts. - Abilitiy to post picture

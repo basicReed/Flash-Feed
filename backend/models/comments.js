@@ -5,17 +5,15 @@ const { NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 
 /** Related functions for comments */
-
 class Comment {
-  /** Create a Comment
+  /**
+   * Create a new comment in the database
    *
-   * post_id: id of post where comment is located
-   * user_id: id of user commenting
-   * content: string txt body of comment
+   * @param {Object} data - An object containing the `postId`, `userId`, and `txtContent` fields
    *
-   * Returns {commentId, userId, txtContent, postId, dateCommented}
+   * @returns {Object} - The newly created comment object with fields `commentId`, `userId`, `txtContent`, `postId`, and `dateCommented`
    *
-   * Throws error if there's an error creating the comment
+   * @throws {Error} - If there's an error creating the comment
    */
 
   static async create(data) {
@@ -61,13 +59,14 @@ class Comment {
     }
   }
 
-  /** Delete a Comment
+  /**
+   * Delete a comment from the database
    *
-   * id: ID of the comment to delete
+   * @param {number} commentId - The ID of the comment to delete
    *
-   * Returns true if successful.
+   * @returns {boolean} - `true` if the comment was deleted successfully
    *
-   * Throws NotFoundError if comment not found.
+   * @throws {NotFoundError} - If the comment with `commentId` is not found in the database
    */
 
   static async delete(commentId) {
@@ -84,13 +83,12 @@ class Comment {
     return true;
   }
 
-  /** Get All Comments For a Post
+  /**
+   * Retrieves all comments for a given post.
    *
-   * post_id: ID of the post for which to retrieve comments
-   *
-   * Returns {Promise<Array>} - An array of comment objects containing the text content and username of the user who created each comment
-   *
-   * Throws error if there's an error retrieving the comments
+   * @param {number} postId - The ID of the post for which to retrieve comments
+   * @returns {Promise<Array>} - An array of comment objects containing the text content and username of the user who created each comment
+   * @throws {Error} If there's an error retrieving the comments
    */
   static async getForPost(postId) {
     const results = await db.query(
@@ -118,14 +116,16 @@ class Comment {
     return comments;
   }
 
-  /** Get a Comment by ID
+  /**
+   * Retrieve a Comment by ID
    *
-   * commentId: ID of the comment to retrieve
+   * @param {number} commentId - ID of the comment to retrieve
    *
-   * Returns {Promise<Comment>} - A comment object containing the text content and username of the user who created the comment
+   * @returns {Promise<Comment>} - A comment object containing the text content, ID of the user who created the comment, ID of the post where the comment is located, and the date when the comment was created.
    *
-   * Throws NotFoundError if comment not found.
+   * @throws {NotFoundError} - If no comment with the specified commentId is found.
    */
+
   static async getById(commentId) {
     const result = await db.query(
       `SELECT comment_id AS "commentId", user_id AS userId, txt_content AS "txtContent", post_id AS "postId", date_commented AS "dateCommented"

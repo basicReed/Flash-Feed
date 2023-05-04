@@ -4,14 +4,16 @@ const db = require("../db");
 const { NotFoundError, BadRequestError } = require("../expressError");
 const User = require("./user.js");
 
+/** Related functions for posts */
 class Post {
-  /** Create a post (from data), update db, return new post data
+  /**
+   * Create a post (from data), update db, and return new post data.
    *
-   * data should be {userId, txtContent, imgUrl, isPrivate}
+   * @param {object} data - The data needed to create a post, including userId, txtContent, imgUrl, and isPrivate.
    *
-   * Returns {postId, userId, txtContent, imgUrl, isPrivate}
+   * @returns {Promise< {postId, userId, txtContent, imgUrl, isPrivate, and datePosted}}
    *
-   * Throws BadRequestError if user not found
+   * @throws {BadRequestError} If the user is not found.
    */
 
   static async create(data) {
@@ -41,9 +43,12 @@ class Post {
     return post;
   }
 
-  /** Finds all posts (if public)
+  /**
+   * Finds all public posts or private posts belonging to the provided user id
    *
-   * Returns [{postId, userId, txtContent, imgUrl, isPrivate, username, isLiked, numLikes, numComments, datePosted }]
+   * @param {number} userId - The id of the user requesting the posts
+   * @param {number} pageNum - The page number of the requested posts (starting at 1)
+   * @returns {Promise<{postId: number, userId: number, text: string, imgUrl: string, isPrivate: boolean, username: string, profileImgUrl: string, timestamp: Date, isLiked: boolean, numLikes: number, numComments: number, isBookmarked: boolean}>}
    */
 
   static async getAll(userId, pageNum) {
@@ -76,6 +81,13 @@ class Post {
     return results.rows;
   }
 
+  /**  NOT USED YET ****
+   * Retrieves all posts from users followed by the given user (if public).
+   *
+   * @param {number} userId - The user ID of the follower.
+   * @param {number} pageNum - The page number of results to retrieve.
+   * @returns {Promise<{postId: number, userId: number, text: string, imgUrl: string, isPrivate: boolean, username: string, profileImgUrl: string, timestamp: Date, isLiked: boolean, numLikes: number, numComments: number, isBookmarked: boolean }}
+   */
   static async getAllFromFollowed(userId, pageNum) {
     const pageSize = 10;
     const offset = (pageNum - 1) * pageSize;
@@ -106,11 +118,12 @@ class Post {
     return results.rows;
   }
 
-  /** Find all posts by user.
+  /**
+   * Retrieve all posts made by a specific user.
    *
-   * Returns [{ postId, userId, txtContent, imgUrl, isPrivate, numLikes, numComments, dataPosted }]
-   *
-   * Throws NotFoundErros if user not found
+   * @param {number} userId - The ID of the user whose posts to retrieve.
+   * @returns {Promise< {postId, userId, txtContent, imgUrl, isPrivate, username, isLiked, numLikes, numComments, and datePosted properties}}
+   * @throws {NotFoundError} If user is not found.
    */
 
   static async getAllByUser(userId) {
@@ -144,11 +157,12 @@ class Post {
     return posts;
   }
 
-  /** Get post by id
-   *
-   * Returns {postId, userId, txtContent, imgUrl, isPrivate, datePosted}
-   *
-   * Throws NotFoundError if not found with postId
+  /**
+   * Get a post by its ID
+   * @param {string} userId - ID of the user making the request
+   * @param {string} postId - ID of the post to retrieve
+   * @returns {Promise<{postId, userId, txtContent, imgUrl, isPrivate, datePosted, username, profileImgUrl, isLiked, numLikes, numComments, isBookmarked }}
+   * @throws {NotFoundError} If no post is found with the specified postId
    */
 
   static async get(userId, postId) {
@@ -179,6 +193,13 @@ class Post {
     return post;
   }
 
+  /**
+   * Check if a post with a given postId exists in the database.
+   *
+   * @param {number} postId - The ID of the post to check
+   * @returns {Object} The post object if found
+   * @throws {NotFoundError} If post not found with given postId
+   */
   static async doesExist(postId) {
     const query = `
       SELECT
@@ -193,9 +214,12 @@ class Post {
     return result.rows[0];
   }
 
-  /** Gets all post liked by user
+  /**
+   * Gets all posts liked by a user.
    *
-   * Returns [{postId, userId, txtContent, imgUrl, isPrivate, datePosted}]
+   * @param {string} userId - The id of the user whose liked posts are being fetched.
+   * @returns {Promise <{postId, userId, txtContent, imgUrl, isPrivate, datePosted, isLiked, numLikes, numComments, isBookmarked}}
+   * @throws {NotFoundError} If the user with the given userId does not exist in the database.
    */
   static async getLiked(userId) {
     //Check if user exist
@@ -203,23 +227,23 @@ class Post {
 
     const results = await db.query(
       `SELECT post.post_id AS "postId",
-      post.user_id AS "userId",
-      post.txt_content AS "text",
-      post.img_url AS "imgUrl",
-      post.is_private AS "isPrivate",
-      users.username AS "username",
-      users.image_url AS "profileImgUrl",
-      post.date_posted AS "timestamp",
-      (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
-      (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
-      (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments",
-      (SELECT EXISTS(SELECT * FROM bookmarks WHERE bookmarks.user_id = $1 AND bookmarks.post_id = post.post_id)) AS "isBookmarked"
-FROM post
-JOIN users ON post.user_id = users.user_id
-JOIN likes ON post.post_id = likes.post_id
-WHERE likes.user_id = $1
-ORDER BY post.date_posted;
-`,
+        post.user_id AS "userId",
+        post.txt_content AS "text",
+        post.img_url AS "imgUrl",
+        post.is_private AS "isPrivate",
+        users.username AS "username",
+        users.image_url AS "profileImgUrl",
+        post.date_posted AS "timestamp",
+        (SELECT EXISTS(SELECT * FROM likes WHERE likes.user_id = $1 AND likes.post_id = post.post_id)) AS "isLiked",
+        (SELECT COUNT(*) FROM likes WHERE likes.post_id = post.post_id) AS "numLikes",
+        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) AS "numComments",
+        (SELECT EXISTS(SELECT * FROM bookmarks WHERE bookmarks.user_id = $1 AND bookmarks.post_id = post.post_id)) AS "isBookmarked"
+      FROM post
+      JOIN users ON post.user_id = users.user_id
+      JOIN likes ON post.post_id = likes.post_id
+      WHERE likes.user_id = $1
+      ORDER BY post.date_posted;
+      `,
       [userId]
     );
     const liked = results.rows;
@@ -227,12 +251,18 @@ ORDER BY post.date_posted;
     return liked;
   }
 
-  /** Update post data
+  /** NOT USED YET ***
+   * Updates post data
    *
-   * Returns {postId, userId, txtContent, isPrivate, datePosted}
-   *
-   * Throws NotFoundError if post not found
+   * @param {number} postId - The ID of the post to be updated
+   * @param {object} data - An object containing the updated post data
+   * @param {string} [data.txtContent] - The updated text content of the post
+   * @param {string} [data.imgUrl] - The updated image URL of the post
+   * @param {boolean} [data.isPrivate] - The updated privacy status of the post
+   * @returns {Promise<{postId:number, userId:number, txtContent:string, imgUrl:string, isPrivate:boolean, datePosted:Date}>} - The updated post object
+   * @throws {NotFoundError} - If post not found with the provided postId
    */
+
   static async update(postId, data) {
     // Check if post exists
     // Throw NotFoundError if !post
@@ -258,14 +288,15 @@ ORDER BY post.date_posted;
     return updatedPost;
   }
 
-  /** Delete post by id
+  /**
+   * Delete a post by its id
    *
-   *  Returns {postId, userId, txtContent, imgUrl, isPrivate, datePosted}
-   *
-   *  Throws NotFoundError if not post found with postId
-   * */
+   * @param {number} postId - The id of the post to be deleted
+   * @returns {Promise<{postId, userId, txtContent, imgUrl, isPrivate, datePosted}}
+   * @throws {NotFoundError} If no post is found with the given postId
+   */
+
   static async delete(postId) {
-    console.log("FINAL ID: ", postId);
     const result = await db.query(
       `DELETE FROM post
             WHERE post_id = $1
@@ -317,6 +348,15 @@ ORDER BY post.date_posted;
     }
   }
 
+  /**
+   * Toggles privacy of post by id for user with userId
+   *
+   * @param {string} postId - The id of the post to toggle privacy
+   * @param {string} userId - The id of the user who owns the post
+   * @returns {boolean} - The updated privacy status of the post (true for private, false for public)
+   * @throws {NotFoundError} - If no post is found with the given postId or if no user is found with the given userId
+   */
+
   static async togglePrivacy(postId, userId) {
     // Check if post exists
     await Post.doesExist(postId);
@@ -337,9 +377,11 @@ ORDER BY post.date_posted;
     return isPrivate;
   }
 
-  /** Get all posts bookmarked by user
+  /**
+   * Get all posts bookmarked by a user
    *
-   * Returns [{ postId, userId, txtContent, imgUrl, isPrivate, numLikes, numComments, dataPosted }]
+   * @param {number} userId - The ID of the user whose bookmarks to retrieve
+   * @returns {Promise<{postId {number}, userId {number}, text {string}, imgUrl {string}, isPrivate {boolean}, username {string}, profileImgUrl {string}, timestamp {Date}, isLiked {boolean}, numLikes {number}, numComments {number, isBookmarked {boolean}}}
    */
   static async getBookmarked(userId) {
     const result = await db.query(
@@ -367,14 +409,13 @@ ORDER BY post.date_posted;
     return posts;
   }
 
-  /** Add or remove a bookmark for a post
+  /**
+   * Adds or removes a bookmark for a post
    *
-   * - userId: id of user bookmarking the post
-   * - postId: id of post to be bookmarked/unbookmarked
-   *
-   * Returns true if bookmark was added, false if it was removed
-   *
-   * Throws NotFoundError if either the user or post is not found
+   * @param {number} userId - ID of the user bookmarking the post.
+   * @param {number} postId - ID of the post to be bookmarked/unbookmarked.
+   * @returns {Promise<boolean>} - Returns true if the bookmark was added, false if it was removed.
+   * @throws {NotFoundError} - If either the user or post is not found.
    */
 
   static async bookmark(userId, postId) {

@@ -9,15 +9,17 @@ const {
   NotFoundError,
 } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
-/** Related functions for users */
 
+/** Related functions for users */
 class User {
-  /** authenticate user with username, password.
+  /**
+   * Authenticate user with username and password
    *
-   * Returns { username, first_name, last_name, email, image_url }
-   *
-   * Throws UnauthorizedError is user not found or wrong password.
-   **/
+   * @param {string} username - The username of the user to authenticate
+   * @param {string} password - The password of the user to authenticate
+   * @returns {Promise < {username, first name, last name, email, image URL}}
+   * @throws {UnauthorizedError} - If user is not found or if the provided password is incorrect
+   */
 
   static async authenticate(username, password) {
     // try to find the user first
@@ -48,11 +50,18 @@ class User {
     throw new UnauthorizedError("Invalid username/password");
   }
 
-  /** Create a user
+  /**
+   * Create a new user in the system
    *
-   *  data should be {}
-   *
-   * Returns {} containing user details
+   * @param {Object} userData - An object containing user data
+   * @param {string} userData.username - The username for the new user
+   * @param {string} userData.password - The password for the new user
+   * @param {string} userData.firstName - The first name for the new user
+   * @param {string} userData.lastName - The last name for the new user
+   * @param {string} userData.email - The email for the new user
+   * @param {string} userData.imageUrl - The profile image URL for the new user
+   * @returns {Promise< {userId, username, firstName, lastName, email,  imageUrl}}
+   * @throws {BadRequestError} - If a user with the same username already exists
    */
 
   static async register({
@@ -98,9 +107,14 @@ class User {
     return user;
   }
 
-  /** Get a user by username
+  /**
+   * Retrieves user information by username
    *
-   * Returns { } containing user details
+   * @param {string} username - the username of the user to retrieve
+   *
+   * @returns {Promise< {userId: number, username: string, firstName: string, lastName: string, email: string, profileImage: string, dateJoined: Date, postCount: number, followersCount: number, followingCount: number}}
+   *
+   * @throws {NotFoundError} If the user is not found
    */
 
   static async get(username) {
@@ -127,9 +141,14 @@ class User {
     return user;
   }
 
-  /** Get user by id
+  /**
+   * Get user by ID
    *
-   * Returns {} containing user details
+   * @param {number} userId - The ID of the user to retrieve
+   *
+   * @returns {Promise < {username: string, firstName: string, lastName: string, email: string, profileImage: string, dateJoined: Date}}
+   *
+   * @throws {NotFoundError} - If the user is not found
    */
 
   static async getById(userId) {
@@ -154,8 +173,7 @@ class User {
   }
 
   /** Update a user's details
-   *
-   * Returns { } containing updated user details
+   * NOT USED YET ****
    */
 
   static async update(username, data) {
@@ -196,10 +214,12 @@ class User {
     return user;
   }
 
-  /** Search for users by username, first name, or last name
+  /**
+   * Retrieves user information by user ID.
    *
-   * Returns [{ userId, username, firstName, lastName, imageUrl }, ...]
-   * Ordered by closest matches first.
+   * @param {number} userId - The ID of the user to retrieve.
+   * @returns {Promise} user details - {username, first name, last name, email, profile image, date joined}
+   * @throws {NotFoundError} If the user is not found in the database.
    */
   static async searchUsers(searchTerm) {
     // Search for users by username, first name, or last name

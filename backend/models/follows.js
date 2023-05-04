@@ -3,8 +3,21 @@ const { NotFoundError } = require("../expressError");
 const User = require("./user");
 
 /** Related functions for follows. */
-
 class Follow {
+  /**
+   * Toggle Follow Relationship
+   * @param {string} followerUsername - The username of the follower
+   * @param {string} followedUsername - The username of the user being followed
+   *
+   * Toggles the follow relationship between the given follower and followed users.
+   * If the follow relationship already exists, it is deleted and false is returned.
+   * If it does not exist, it is created and true is returned.
+   *
+   * @returns {boolean} - True if follow relationship was created, false if it was deleted.
+   *
+   * @throws {NotFoundError} if either follower or followed user is not found.
+   * @throws {Error} if there's any other error toggling the follow relationship.
+   */
   static async toggleFollow(followerUsername, followedUsername) {
     try {
       const follower = await db.query(
@@ -57,12 +70,13 @@ class Follow {
     }
   }
 
-  /** Check if a user is following another user
+  /**
+   * Check if a user is following another user
    *
-   * followerId: id of the user following
-   * followedId: id of the user being followed
+   * @param {string} followerUsername - The username of the user who is following
+   * @param {string} followedUsername - The username of the user being followed
    *
-   * Returns true if they are following, false otherwise.
+   * @returns {Promise<boolean>} - True if follower is following followed, false otherwise.
    */
 
   static async isFollowing(followerUsername, followedUsername) {
@@ -77,11 +91,15 @@ class Follow {
     return result.rows.length > 0;
   }
 
-  /** Get all users a user is following
+  /**
+   * Get all users followed by a given user
    *
-   * userId: id of the user to find followed users for
+   * @param {number} userId - The ID of the user to find followed users for
    *
-   * Returns [{ follower_id, followed_id, username }]
+   * @returns {Promise<Array<{ userId: number, username: string, firstName: string, lastName: string, profileImage: string }>>}
+   *      - An array of objects containing information about the followed users, including their user ID, username, first name, last name, and profile image URL
+   *
+   * @throws {NotFoundError} - If the user with the given ID does not exist or if there are no users followed by the given user
    */
 
   static async getFollowedUsers(userId) {
@@ -102,11 +120,12 @@ class Follow {
     return result.rows;
   }
 
-  /** Get all users following a user
+  /**
+   * Get all users following a user.
    *
-   * userId: id of the user to find followers for
-   *
-   * Returns [{ follower_id, followed_id, username }]
+   * @param {number} userId - The ID of the user to find followers for.
+   * @returns {Promise<Array<{ userId: number, username: string, firstName: string, lastName: string, profileImage: string }>>} - An array of objects representing users who follow the specified user, containing their user ID, username, first name, last name, and profile image URL.
+   * @throws {NotFoundError} If no users are following the specified user.
    */
 
   static async getFollowers(userId) {
