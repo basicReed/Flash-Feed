@@ -14,7 +14,14 @@ const commentCreateSchema = require("../schemas/commentCreate.json");
 const commentDeleteSchema = require("../schemas/commentDelete.json");
 const commentGetForPostSchema = require("../schemas/commentGetForPost.json");
 
-/** POST / comments/create
+/** POST /comments/create
+ * CREATE a new comment for a post
+ *
+ * @param {string} postId - The id of the post the comment belongs to
+ * @param {string} userId - The id of the user creating the comment
+ * @param {string} txtContent - The text content of the comment
+ * @returns {object} An object containing the new comment details
+ * @throws {BadRequestError} If the request body does not pass validation
  */
 
 router.post(
@@ -37,13 +44,11 @@ router.post(
   }
 );
 
-/** DELETE / comments/:commentId
+/** DELETE /comments/:commentId
  *
  * Delete a comment by its ID.
  *
- * Returns { success: true }.
- *
- * Authorization required: logged in as the user who created the comment.
+ * NOT USED YET****
  */
 router.delete(
   "/:commentId",
@@ -61,13 +66,17 @@ router.delete(
   }
 );
 
-/** GET / comments/post/:postId
+/**
+ * GET /comments/post/:postId
  *
  * Retrieve all comments for a post by its ID.
  *
- * Returns { comments: [{ txt_content, username }, ...] }.
+ * @param {string} postId - ID of the post
  *
- * Authorization required: none.
+ * @returns {Object} - Object containing an array of comments
+ *                      [{ txt_content, username }, ...]
+ *
+ * @throws {NotFoundError} - If the post is not found
  */
 router.get("/post/:postId", ensureLoggedIn, async function (req, res, next) {
   try {

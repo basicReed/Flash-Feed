@@ -18,7 +18,10 @@ const userSearchSchema = require("../schemas/userSearch.json");
 
 const router = new express.Router();
 
-// Get all users
+/** GET /users/
+ *
+ * @returns {[{ ...user }, ...]}
+ */
 router.get("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const users = await User.getAll();
@@ -28,11 +31,11 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
-// Search for users by username, first name, or last name
-// GET /users/search?q=searchTerm
-// Returns [{ userId, username, firstName, lastName, imageUrl }, ...]
-// Ordered by closest matches first.
-
+/**GET /users/search?q=searchTerm
+ * Search for users by username, first name, or last name
+ * @returns {[{ ...user }, ...]}
+ *      - Ordered by closest matches first.
+ */
 router.get("/search", async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.query, userSearchSchema);
@@ -49,6 +52,9 @@ router.get("/search", async function (req, res, next) {
   }
 });
 
+/** GET /users/:idOrUsername
+ * fetches user based on id or username
+ */
 router.get("/:idOrUsername", async function (req, res, next) {
   try {
     const param = req.params.idOrUsername;
@@ -68,6 +74,7 @@ router.get("/:idOrUsername", async function (req, res, next) {
   }
 });
 
+// POST /users/
 // Create a new user
 router.post("/", async function (req, res, next) {
   try {
@@ -112,7 +119,7 @@ router.patch(
  *
  * Authorization required: login
  *
- * Returns: {posts: [{id, title, body, userId, bookmarked}]}
+ * @returns {[...post, ...]}
  *
  * Errors:
  * - 401 if user is not logged in

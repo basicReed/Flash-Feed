@@ -18,7 +18,6 @@ const followRemoveSchema = require("../schemas/followRemove.json");
  *
  * Authorization required: logged in user
  */
-
 router.post(
   "/toggle",
   ensureLoggedIn,
@@ -47,7 +46,6 @@ router.post(
  *
  * Authorization required: logged in user
  */
-
 router.get("/is-following", ensureLoggedIn, async function (req, res, next) {
   // const validator = jsonschema.validate(req.body, followIsFollowingSchema);
   // if (!validator.valid) {
@@ -75,7 +73,6 @@ router.get("/is-following", ensureLoggedIn, async function (req, res, next) {
  *
  * Authorization required: logged in user
  */
-
 router.get("/:id/followed", ensureLoggedIn, async function (req, res, next) {
   try {
     const userId = parseInt(req.params.id);
@@ -94,7 +91,6 @@ router.get("/:id/followed", ensureLoggedIn, async function (req, res, next) {
  *
  * Authorization required: logged in user
  */
-
 router.get("/:id/followers", ensureLoggedIn, async function (req, res, next) {
   try {
     const userId = parseInt(req.params.id);

@@ -3,7 +3,7 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 const router = new express.Router();
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, NotFoundError } = require("../expressError");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
 const Post = require("../models/post");
@@ -188,6 +188,14 @@ router.post(
   }
 );
 
+/**POST /posts/private
+ *
+ * toggle isPrivate on current users post
+ * @param {postId}
+ * @param {userId} - current user
+ * @returns {boolean} - if private
+ * @throws {NotFoundError}
+ */
 router.post(
   "/private",
   ensureCorrectUser,
@@ -214,7 +222,7 @@ router.post(
  *
  * Authorization required: login
  *
- * Returns: { message: "Post bookmarked" }
+ * @returns {boolean} - is bookmarked?
  *
  * Errors:
  * - 401 if user is not logged in
