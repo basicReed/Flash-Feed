@@ -66,6 +66,7 @@ FRONTEND: uses [React](https://react.dev/reference/react), CSS, HTML, JavaScript
 - axios: used for making HTTP requests from the frontend to the backend server.
 - jwt-decode: extract values for JWT
 - fortawesome: icons & font
+- react-infinite-scroll-component: used for pagenation or "infinite scroll"
 
 BACKEND: uses [Node](https://nodejs.org/en/docs), [Express](https://expressjs.com/en/guide/routing.html), and [PostgreSQL](https://github.com/postgres/postgres) database. There are also number of dependencies:
 
