@@ -59,6 +59,7 @@ This full-stack application uses a number of technologies.
 
 FRONTEND: uses [React](https://react.dev/reference/react), CSS, HTML, JavaScript as well as number of dependancies:
 
+- Gramarly API: for textbox spelling and grammer check
 - emoji-mart: for adding emojis to messages
 - react-time-ago: manage time past since post or comment
 - react-router-dom: Used for client-side routing within the React app.
